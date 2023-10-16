@@ -32,10 +32,16 @@ public class MecanumDriveMode extends LinearOpMode {
         backLeftMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
         double speedLimit = .3;
+        double setAngle = 0;
+        double angleOffset = -361;
         waitForStart();
 
         while (opModeIsActive()) {
             Orientation orientation = gyro.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+            if (angleOffset == -361) {
+                angleOffset = orientation.thirdAngle;
+            }
+
             telemetry.addData("Gyro", orientation.thirdAngle);
             double frontLeftAmt =  speedLimit * (this.gamepad1.left_stick_y - this.gamepad1.left_stick_x) - this.gamepad1.right_stick_x * speedLimit;
             double frontRightAmt = speedLimit * (this.gamepad1.left_stick_y + this.gamepad1.left_stick_x) + this.gamepad1.right_stick_x * speedLimit;
@@ -48,6 +54,8 @@ public class MecanumDriveMode extends LinearOpMode {
             else {
                 speedLimit = .3;
             }
+
+
 
             frontLeftMotor.setPower(frontLeftAmt);
             frontRightMotor.setPower(frontRightAmt);
