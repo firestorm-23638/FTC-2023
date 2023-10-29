@@ -19,14 +19,15 @@ public class ArmSubsystem implements BaseSubsystem {
 
     private final double armDropPos = 500;
     private final double clawStartPlacePos = 100;
-    private double armEncoder;
+    private double armEncoder = 0;
     private double hardOutput = 0;
 
     private boolean clawPickupState = false;
+    private boolean pivotPickupState = false;
     private boolean armRaisedState = false;
 
-    private DcMotorEx arm1;
-    private DcMotorEx arm2;
+    //private DcMotorEx arm1;
+    //private DcMotorEx arm2;
     private DcMotorEx intake;
     private Servo pivot;
     private Servo claw;
@@ -45,14 +46,14 @@ public class ArmSubsystem implements BaseSubsystem {
         hardOutput = val;
     }
 
-    public void configArmState(boolean clawPickupState, boolean armRaisedState) {
+    public void configArmState(boolean clawPickupState, boolean pivotPickupState, double armEncoderPos) {
         this.clawPickupState = clawPickupState;
-        this.armRaisedState = armRaisedState;
+        this.pivotPickupState = pivotPickupState;
+        this.armEncoder = armEncoderPos;
     }
 
     public void init() {
-        arm1 = hardwareMap.get(DcMotorEx.class, "arm");
-        arm2 = hardwareMap.get(DcMotorEx.class, "arm2");
+
 
         pivot = this.hardwareMap.get(Servo.class, "clawServo");
         claw = this.hardwareMap.get(Servo.class, "pivotServo");
@@ -60,33 +61,42 @@ public class ArmSubsystem implements BaseSubsystem {
         pivot.setPosition(0);
         claw.setPosition(0);
 
-        arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        arm2.setDirection(DcMotorSimple.Direction.REVERSE);
+        //arm2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     private boolean setClaw(double pos) {
         claw.setPosition(pos);
-        return (claw.getPosition() == pos);
+        return (claw.getPosition() - pos > -0.05 && claw.getPosition() - pos < 0.05);
     }
 
     private boolean setPivot(double pos) {
         pivot.setPosition(pos);
-        return (pivot.getPosition() == pos);
-    }
-
-    private double averageArmPos() {
-        return (arm1.getCurrentPosition() + (arm2.getCurrentPosition() * -1)) / 2;
+        return (pivot.getPosition() - pos > -0.05 && pivot.getPosition() - pos < 0.05);
     }
 
     public void loop() {
-        telemetry.addData("Arm avg pos", averageArmPos());
-        if (averageArmPos() > clawStartPlacePos) {
-            pivot.setPosition(0.00055 * (averageArmPos() - 100));
+        telemetry.addData("Arm avg pos", armEncoder);
+        if (pivotPickupState) {
+            setPivot(.2);
+        }
+        else {
+            setPivot(0);
+        }
+        if (clawPickupState) {
+            setClaw(0);
+        }
+        else {
+            setClaw(.25);
+        }
+
+        /*if (averageArmPos() > clawStartPlacePos) {
+           // pivot.setPosition(0.00055 * (averageArmPos() - 100));
         }
         else if (clawPickupState) {
             if (clawStage == 1) {
@@ -95,7 +105,7 @@ public class ArmSubsystem implements BaseSubsystem {
                 }
             }
             else if (clawStage == 2) {
-                if (setPivot(.22)) {
+                if (setPivot(.2)) {
                     clawStage ++;
                 }
             }
@@ -112,9 +122,8 @@ public class ArmSubsystem implements BaseSubsystem {
         }
         else {
             clawStage = 1;
-        }
-
-        arm1.setPower(this.hardOutput);
-        arm2.setPower(this.hardOutput * -1);
+            setClaw(.25);
+            setPivot(0);
+        }*/
     }
 }

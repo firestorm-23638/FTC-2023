@@ -27,6 +27,9 @@ public class MecanumDriveMode extends LinearOpMode {
         Servo pivot = this.hardwareMap.get(Servo.class, "clawServo");
         Servo claw = this.hardwareMap.get(Servo.class, "pivotServo");
 
+        DcMotorEx arm1 = hardwareMap.get(DcMotorEx.class, "arm");
+        DcMotorEx arm2 = hardwareMap.get(DcMotorEx.class, "arm2");
+
         IMU gyro = this.hardwareMap.get(IMU.class, "imu");
 
         DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(this.hardwareMap, telemetry);
@@ -59,8 +62,9 @@ public class MecanumDriveMode extends LinearOpMode {
                 intakeMotor.setPower(0);
             }
 
-            arm.configHardOutput(this.gamepad1.right_trigger - this.gamepad1.left_trigger);
-            arm.configArmState(this.gamepad1.a, this.gamepad1.b);
+            arm1.setPower(this.gamepad1.right_trigger - this.gamepad1.left_trigger);
+            arm2.setPower((this.gamepad1.right_trigger - this.gamepad1.left_trigger) * -1);
+            arm.configArmState(this.gamepad1.b, this.gamepad1.a, (arm1.getCurrentPosition() + (arm2.getCurrentPosition() * -1)) / 2);
 
             arm.loop();
             drivetrain.loop();
