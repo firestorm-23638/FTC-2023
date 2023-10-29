@@ -2,19 +2,24 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-
+import org.firstinspires.ftc.teamcode.Vector;
 import org.firstinspires.ftc.teamcode.BaseSubsystem;
 
 public class DrivetrainSubsystem implements BaseSubsystem {
+
     private DcMotorEx frontLeftMotor;
     private DcMotorEx frontRightMotor;
     private DcMotorEx backLeftMotor;
     private DcMotorEx backRightMotor;
-    private HardwareMap hardwareMap;
 
-    public DrivetrainSubsystem(HardwareMap map) {
+    private HardwareMap hardwareMap;
+    private Telemetry telemetry;
+
+    public DrivetrainSubsystem(HardwareMap map, Telemetry telemetry) {
         this.hardwareMap = map;
+        this.telemetry = telemetry;
 
         this.frontLeftMotor = this.hardwareMap.get(DcMotorEx.class, "frontLeft");
         this.frontRightMotor = this.hardwareMap.get(DcMotorEx.class, "frontRight");
@@ -22,18 +27,34 @@ public class DrivetrainSubsystem implements BaseSubsystem {
         this.backRightMotor = this.hardwareMap.get(DcMotorEx.class, "backRight");
     }
 
-    public double frontLeftAmt = 0;
-    public double frontRightAmt = 0;
-    public double backLeftAmt = 0;
-    public double backRightAmt = 0;
+    private double coterminalAngle(double ang) {
+        while (ang > 360) {
+            ang -= 360;
+        }
+        while (ang < 0) {
+            ang += 360;
+        }
+        return ang;
+    }
+
+    private double frontLeftAmt = 0;
+    private double frontRightAmt = 0;
+    private double backLeftAmt = 0;
+    private double backRightAmt = 0;
     public double speedLimit = .5;
 
-    public void setToValues(double x, double y, double turn, double gyroOffset) {
-        this.frontLeftAmt =  speedLimit * (y - x) - turn * speedLimit;
-        this.frontRightAmt = speedLimit * (y + x) + turn * speedLimit;
-        this.backLeftAmt =   speedLimit * (y + x) - turn * speedLimit;
-        this.backRightAmt =  speedLimit * (y - x) + turn * speedLimit;
+    public Vector applyVector = new Vector();
 
+    public void setToValues(double x, double y, double turn, double gyroOffset) {
+        this.applyVector.x = x;
+        this.applyVector.y = y;
+
+        this.applyVector.setAngle(coterminalAngle(this.applyVector.getAngle() + gyroOffset));//coterminalAngle(this.applyVector.getAngle() - gyroOffset));
+
+        this.frontLeftAmt =  speedLimit * (this.applyVector.y - this.applyVector.x) - turn * speedLimit;
+        this.frontRightAmt = speedLimit * (this.applyVector.y + this.applyVector.x) + turn * speedLimit;
+        this.backLeftAmt =   speedLimit * (this.applyVector.y + this.applyVector.x) - turn * speedLimit;
+        this.backRightAmt =  speedLimit * (this.applyVector.y - this.applyVector.x) + turn * speedLimit;
 
     }
 
