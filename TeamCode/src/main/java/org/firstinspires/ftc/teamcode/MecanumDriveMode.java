@@ -13,37 +13,31 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.DrivetrainSubsystem;
 
 @TeleOp
 public class MecanumDriveMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotorEx frontLeftMotor = this.hardwareMap.get(DcMotorEx.class, "frontLeft");
-        DcMotorEx frontRightMotor = this.hardwareMap.get(DcMotorEx.class, "frontRight");
-        DcMotorEx backLeftMotor = this.hardwareMap.get(DcMotorEx.class, "backLeft");
-        DcMotorEx backRightMotor = this.hardwareMap.get(DcMotorEx.class, "backRight");
 
         DcMotorEx intakeMotor = this.hardwareMap.get(DcMotorEx.class, "intake");
         DcMotorEx armMotor = this.hardwareMap.get(DcMotorEx.class, "arm");
-
-        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        DcMotorEx armMotor2 = this.hardwareMap.get(DcMotorEx.class, "arm2");
 
         Servo pivot = this.hardwareMap.get(Servo.class, "clawServo");
         Servo claw = this.hardwareMap.get(Servo.class, "pivotServo");
 
         IMU gyro = this.hardwareMap.get(IMU.class, "imu");
-        frontLeftMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotorEx.Direction.REVERSE);
+
+        DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(this.hardwareMap);
 
         double speedLimit = .5;
         double setAngle = 0;
         double angleOffset = -361;
         boolean servosZeroed = false;
+
+        drivetrain.init();
         waitForStart();
 
         while (opModeIsActive()) {
@@ -51,6 +45,8 @@ public class MecanumDriveMode extends LinearOpMode {
             if (angleOffset == -361) {
                 angleOffset = orientation.thirdAngle;
             }
+
+            drivetrain.setToValues(this.gamepad1.left_stick_x, this.gamepad1.left_stick_y, this.gamepad1.right_stick_x, orientation.thirdAngle - angleOffset);
 
             telemetry.addData("Gyro", orientation.thirdAngle);
             if (!servosZeroed) {
@@ -61,42 +57,33 @@ public class MecanumDriveMode extends LinearOpMode {
             }
             telemetry.addData("Arm encoder", armMotor.getCurrentPosition());
 
-            double frontLeftAmt =  speedLimit * (this.gamepad1.left_stick_y - this.gamepad1.left_stick_x) - this.gamepad1.right_stick_x * speedLimit;
-            double frontRightAmt = speedLimit * (this.gamepad1.left_stick_y + this.gamepad1.left_stick_x) + this.gamepad1.right_stick_x * speedLimit;
-            double backLeftAmt =   speedLimit * (this.gamepad1.left_stick_y + this.gamepad1.left_stick_x) - this.gamepad1.right_stick_x * speedLimit;
-            double backRightAmt =  speedLimit * (this.gamepad1.left_stick_y - this.gamepad1.left_stick_x) + this.gamepad1.right_stick_x * speedLimit;
+
             armMotor.setPositionPIDFCoefficients(.0015);
             if (this.gamepad1.right_bumper) {
                 //speedLimit = .6;
                 intakeMotor.setPower(.25);
-            }
-            else if (this.gamepad1.left_bumper) {
+            } else if (this.gamepad1.left_bumper) {
                 intakeMotor.setPower(-.25);
-            }
-            else {
+            } else {
                 intakeMotor.setPower(0);
             }
 
             if (this.gamepad1.a) {
                 claw.setPosition(0);
-            }
-            else {
+            } else {
                 claw.setPosition(.25);
             }
-            armMotor.setPower((this.gamepad1.right_trigger - this.gamepad1.left_trigger) * .7);
+            armMotor.setPower((this.gamepad1.right_trigger - this.gamepad1.left_trigger) * 1);
+            armMotor2.setPower((this.gamepad1.right_trigger - this.gamepad1.left_trigger) * -1);
 
 
             if (this.gamepad1.b) {
                 pivot.setPosition(.22);
-            }
-            else {
+            } else {
                 pivot.setPosition(0);
             }
 
-            frontLeftMotor.setPower(frontLeftAmt);
-            frontRightMotor.setPower(frontRightAmt);
-            backLeftMotor.setPower(backLeftAmt);
-            backRightMotor.setPower(backRightAmt);
+            drivetrain.loop();
             telemetry.update();
         }
     }
