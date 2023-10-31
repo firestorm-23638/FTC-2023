@@ -81,7 +81,6 @@ public class ArmSubsystem implements BaseSubsystem {
     }
 
     public void loop() {
-        telemetry.addData("Arm avg pos", armEncoder);
         if (pivotPickupState) {
             setPivot(.2);
         }
@@ -92,13 +91,13 @@ public class ArmSubsystem implements BaseSubsystem {
             setClaw(0);
         }
         else {
-            setClaw(.25);
+            setClaw(.3);
         }
 
-        /*if (averageArmPos() > clawStartPlacePos) {
-           // pivot.setPosition(0.00055 * (averageArmPos() - 100));
-        }
-        else if (clawPickupState) {
+        //if (armEncoder > clawStartPlacePos) {
+           //pivot.setPosition(0.00055 * (armEncoder - 100));
+        //}
+        /*else if (clawPickupState) {
             if (clawStage == 1) {
                 if (setClaw(0)) {
                     clawStage ++;

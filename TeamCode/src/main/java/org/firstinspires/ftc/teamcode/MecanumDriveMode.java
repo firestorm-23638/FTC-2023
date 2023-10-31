@@ -26,6 +26,7 @@ public class MecanumDriveMode extends LinearOpMode {
 
         Servo pivot = this.hardwareMap.get(Servo.class, "clawServo");
         Servo claw = this.hardwareMap.get(Servo.class, "pivotServo");
+        Servo plane = this.hardwareMap.get(Servo.class, "planeServo");
 
         DcMotorEx arm1 = hardwareMap.get(DcMotorEx.class, "arm");
         DcMotorEx arm2 = hardwareMap.get(DcMotorEx.class, "arm2");
@@ -40,6 +41,8 @@ public class MecanumDriveMode extends LinearOpMode {
 
         drivetrain.init();
         arm.init();
+        arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
 
         while (opModeIsActive()) {
@@ -62,9 +65,18 @@ public class MecanumDriveMode extends LinearOpMode {
                 intakeMotor.setPower(0);
             }
 
+            telemetry.addData("Arm avg pos", arm1.getCurrentPosition() * -1);
+
+            if (this.gamepad1.back) {
+                plane.setPosition(0);
+            }
+            else {
+                plane.setPosition(.5);
+            }
+
             arm1.setPower(this.gamepad1.right_trigger - this.gamepad1.left_trigger);
             arm2.setPower((this.gamepad1.right_trigger - this.gamepad1.left_trigger) * -1);
-            arm.configArmState(this.gamepad1.b, this.gamepad1.a, (arm1.getCurrentPosition() + (arm2.getCurrentPosition() * -1)) / 2);
+            arm.configArmState(this.gamepad1.a, this.gamepad1.b, arm1.getCurrentPosition() * -1);
 
             arm.loop();
             drivetrain.loop();
