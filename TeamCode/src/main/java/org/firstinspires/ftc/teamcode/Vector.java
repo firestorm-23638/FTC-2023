@@ -13,16 +13,17 @@ public class Vector {
     }
 
     public double getAngle() {
-        return toDegrees(Math.atan2(y, x));
+        return Math.toDegrees(Math.atan2(y, x));
 
     }
 
     public double getMag() {
-        return Math.sqrt((x*x) + (y*y));
+
+        return Math.sqrt((Math.pow(x, 2)) + (Math.pow(y, 2)));
     }
 
     public void setAngle(double newAng) {
-        x = Math.cos(toRadians(newAng)) * getMag();
-        y = Math.sin(toRadians(newAng)) * getMag();
+        x = Math.cos(Math.toRadians(newAng)) * getMag();
+        y = Math.sin(Math.toRadians(newAng)) * getMag();
     }
 };

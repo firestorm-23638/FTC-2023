@@ -59,7 +59,7 @@ public class ArmSubsystem implements BaseSubsystem {
         claw = this.hardwareMap.get(Servo.class, "pivotServo");
 
         pivot.setPosition(0);
-        claw.setPosition(0);
+        claw.setPosition(.3);
 
         //arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

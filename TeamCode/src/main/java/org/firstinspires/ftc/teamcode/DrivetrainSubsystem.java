@@ -46,16 +46,41 @@ public class DrivetrainSubsystem implements BaseSubsystem {
     public Vector applyVector = new Vector();
 
     public void setToValues(double x, double y, double turn, double gyroOffset) {
-        this.applyVector.x = x;
+        /*this.applyVector.x = x;
         this.applyVector.y = y;
-
         this.applyVector.setAngle(coterminalAngle(this.applyVector.getAngle() + gyroOffset));//coterminalAngle(this.applyVector.getAngle() - gyroOffset));
+        telemetry.addData("drive vector x", Math.cos(Math.toRadians(coterminalAngle(this.applyVector.getAngle() + gyroOffset))));
+        telemetry.addData("drive vector y", Math.sin(Math.toRadians(coterminalAngle(this.applyVector.getAngle() + gyroOffset))));
+        telemetry.addData("vector angle", coterminalAngle(this.applyVector.getAngle() + gyroOffset));
+        telemetry.addData("vector mag", Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+        telemetry.addData("drive vector Real x", this.applyVector.x);
+        telemetry.addData("drive vector Real y", this.applyVector.y);*/
 
-        this.frontLeftAmt =  speedLimit * (this.applyVector.y - this.applyVector.x) - turn * speedLimit;
-        this.frontRightAmt = speedLimit * (this.applyVector.y + this.applyVector.x) + turn * speedLimit;
-        this.backLeftAmt =   speedLimit * (this.applyVector.y + this.applyVector.x) - turn * speedLimit;
-        this.backRightAmt =  speedLimit * (this.applyVector.y - this.applyVector.x) + turn * speedLimit;
+        this.frontLeftAmt =  speedLimit * (y - x) - turn * speedLimit;
+        this.frontRightAmt = speedLimit * (y + x) + turn * speedLimit;
+        this.backLeftAmt =   speedLimit * (y + x) - turn * speedLimit;
+        this.backRightAmt =  speedLimit * (y - x) + turn * speedLimit;
+    }
 
+    public void turn(double perc) {
+        this.frontLeftAmt = perc;
+        this.frontRightAmt = -perc;
+        this.backLeftAmt = perc;
+        this.backRightAmt = -perc;
+    }
+
+    public void forward(double perc) {
+        this.frontLeftAmt = perc;
+        this.frontRightAmt = perc;
+        this.backLeftAmt = perc;
+        this.backRightAmt = perc;
+    }
+
+    public void zero() {
+        this.frontLeftAmt = 0;
+        this.frontRightAmt = 0;
+        this.backRightAmt = 0;
+        this.backLeftAmt = 0;
     }
 
     public void init() {

@@ -56,10 +56,10 @@ public class MecanumDriveMode extends LinearOpMode {
 
             if (this.gamepad1.right_bumper) {
                 //speedLimit = .6;
-                intakeMotor.setPower(.25);
+                intakeMotor.setPower(.4);
             }
             else if (this.gamepad1.left_bumper) {
-                intakeMotor.setPower(-.25);
+                intakeMotor.setPower(-.4);
             }
             else {
                 intakeMotor.setPower(0);
