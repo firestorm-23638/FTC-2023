@@ -1,21 +1,15 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.ClawMode;
-import org.firstinspires.ftc.teamcode.ArmMode;
 
-import org.firstinspires.ftc.teamcode.BaseSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.BaseSubsystem;
 
 
 public class ArmSubsystem implements BaseSubsystem {
-    private ClawMode clawPos;
-    private ArmMode armPos;
 
     private final double armDropPos = 500;
     private final double clawStartPlacePos = 100;

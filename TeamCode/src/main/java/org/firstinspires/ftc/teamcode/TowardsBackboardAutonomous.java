@@ -4,8 +4,8 @@ import org.opencv.core.Point;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.DrivetrainSubsystem;
+
+import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 
 @Autonomous
-public class CoolAutonomous extends LinearOpMode {
+public class TowardsBackboardAutonomous extends LinearOpMode {
     OpenCvWebcam camera;
     FindProp propLoc = new FindProp();
     public void runOpMode() {
@@ -56,12 +56,12 @@ public class CoolAutonomous extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(29.5, 0, Math.toRadians(180)))
                 .build();
         Trajectory goLeft = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
-                        .splineTo(new Vector2d(23, 5), 0)
-                                .build();
+                .strafeTo(new Vector2d(20, 12.5))
+                .build();
 
         Trajectory goRight = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
-                        .splineTo(new Vector2d(23, -10), 0)
-                                .build();
+                .splineTo(new Vector2d(30, -11), Math.toRadians(270))
+                .build();
 
         waitForStart();
         //drive.init();
@@ -80,24 +80,38 @@ public class CoolAutonomous extends LinearOpMode {
                     //drive.loop();
                     //sampleDrive.followTrajectory(backup);
                 }*/
+                //sampleDrive.followTrajectory(backup);
+                //return;
                 sampleDrive.followTrajectory(backup);
                 return;
+                /*if (circlePos == 1) {
+                    sampleDrive.followTrajectory(backup);
+                    return;
+                }
+                else if (circlePos == 2) {
+                    sampleDrive.followTrajectory(backup);
+                    return;
+                }
+                else if (circlePos == 3) {
+                    sampleDrive.followTrajectory(goLeft);
+                    return;
+                }*/
             }
             else if (circleTick > 100000 && circlePos == -1) {
                 circlePos = 1;
                 hasCircle = true;
             }
             else if (propLoc.circleNum > 0) {
-                    if (propLoc.recentCircle.x < 100) {
-                        circlePos = 3;
-                        activeCircle = propLoc.recentCircle;
-                        hasCircle = true;
-                    }
-                    else if (propLoc.recentCircle.x > 0){
-                        circlePos = 2;
-                        activeCircle = propLoc.recentCircle;
-                        hasCircle = true;
-                    }
+                if (propLoc.recentCircle.x < 150) {
+                    circlePos = 3;
+                    activeCircle = propLoc.recentCircle;
+                    hasCircle = true;
+                }
+                else if (propLoc.recentCircle.x > 0){
+                    circlePos = 2;
+                    activeCircle = propLoc.recentCircle;
+                    hasCircle = true;
+                }
 
 
             }
