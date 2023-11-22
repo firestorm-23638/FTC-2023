@@ -21,7 +21,6 @@ public class MecanumDriveMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         DcMotorEx intakeMotor = this.hardwareMap.get(DcMotorEx.class, "intake");
-        DcMotorEx armMotor = this.hardwareMap.get(DcMotorEx.class, "arm");
         DcMotorEx climbMotor = this.hardwareMap.get(DcMotorEx.class, "climb");
 
         climbMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -34,7 +33,7 @@ public class MecanumDriveMode extends LinearOpMode {
         DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(this.hardwareMap, telemetry);
         ArmSubsystem arm = new ArmSubsystem(this.hardwareMap, telemetry);
 
-        double speedLimit = .5;
+        double speedLimit = 0.5;
 
         drivetrain.init();
         arm.init();
@@ -43,12 +42,13 @@ public class MecanumDriveMode extends LinearOpMode {
 
         while (opModeIsActive()) {
             drivetrain.setToValues(this.gamepad1.left_stick_x, this.gamepad1.left_stick_y, this.gamepad1.right_stick_x, 0);
+            arm.configArmState(this.gamepad1.a, this.gamepad1.b, this.gamepad1.right_trigger - this.gamepad1.left_trigger);
 
             if (this.gamepad1.right_bumper) {
-                intakeMotor.setPower(.4);
+                intakeMotor.setPower(0.4);
             }
             else if (this.gamepad1.left_bumper) {
-                intakeMotor.setPower(-.4);
+                intakeMotor.setPower(-0.4);
             }
             else {
                 intakeMotor.setPower(0);
@@ -58,12 +58,19 @@ public class MecanumDriveMode extends LinearOpMode {
                 plane.setPosition(0);
             }
             else {
-                plane.setPosition(.5);
+                plane.setPosition(0.5);
             }
 
-            armMotor.setPower(this.gamepad1.right_trigger - this.gamepad1.left_trigger);
-
             telemetry.addData("Climb motor encoder", climbMotor.getCurrentPosition());
+            if (this.gamepad1.y) {
+                climbMotor.setPower(1);
+            }
+            else if (this.gamepad1.x) {
+                climbMotor.setPower(-1);
+            }
+            else {
+                climbMotor.setPower(0);
+            }
 
             arm.loop();
             drivetrain.loop();
