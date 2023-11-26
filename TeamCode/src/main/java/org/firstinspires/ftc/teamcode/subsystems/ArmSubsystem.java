@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoControllerEx;
@@ -25,13 +27,35 @@ public class ArmSubsystem implements BaseSubsystem {
 
     private boolean withinDeadband(double n, double r, double d) {
         n -= r;
-
         return (n < d) && (n > -d);
     }
 
     public ArmSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
+
+        pivot = this.hardwareMap.get(Servo.class, "clawServo");
+        claw = this.hardwareMap.get(Servo.class, "pivotServo");
+        arm = this.hardwareMap.get(DcMotorEx.class, "arm");
+    }
+
+    public void init() {
+
+        pivot.setPosition(0);
+        claw.setPosition(0.3);
+
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void setArmPos(double pos, boolean blocking) {
+        arm.setPower((arm.getCurrentPosition() - pos) * -1.001);
+        while (blocking) {
+            if (withinDeadband(arm.getCurrentPosition(), pos, 10)) {
+                return;
+            }
+        }
     }
 
     public void configArmState(boolean clawPickupState, boolean pivotPickupState, double armOutput) {
@@ -40,39 +64,28 @@ public class ArmSubsystem implements BaseSubsystem {
         this.armOutput = armOutput;
     }
 
-    public void init() {
-        pivot = this.hardwareMap.get(Servo.class, "clawServo");
-        claw = this.hardwareMap.get(Servo.class, "pivotServo");
-        arm = this.hardwareMap.get(DcMotorEx.class, "arm");
-
-        pivot.setPosition(0);
-        claw.setPosition(0.3);
-    }
-
-    private boolean setClaw(double pos) {
+    public void setClaw(double pos) {
         claw.setPosition(pos);
-        return (claw.getPosition() - pos > -0.05 && claw.getPosition() - pos < 0.05);
     }
 
-    private boolean setPivot(double pos) {
+    public void setPivot(double pos) {
         pivot.setPosition(pos);
-        return (pivot.getPosition() - pos > -0.05 && pivot.getPosition() - pos < 0.05);
     }
 
     public void loop() {
         arm.setPower(this.armOutput);
 
         if (clawPickupState) {
-            claw.setPosition(0);
+            setClaw(0.3);
         }
         else {
-            claw.setPosition(.3);
+            setClaw(0);
         }
         if (pivotPickupState) {
-            pivot.setPosition(.25);
+            setPivot(0.36);
         }
         else {
-            pivot.setPosition(0);
+            setPivot(0);
         }
     }
 }

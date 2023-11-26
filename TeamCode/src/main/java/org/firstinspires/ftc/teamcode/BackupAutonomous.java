@@ -25,7 +25,7 @@ public class BackupAutonomous extends LinearOpMode {
 
         sampleDrive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
         Trajectory backup = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(29.5, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(30.5, 0, Math.toRadians(180)))
                 .build();
 
         waitForStart();
