@@ -42,7 +42,7 @@ public class ArmSubsystem implements BaseSubsystem {
     public void init() {
 
         pivot.setPosition(0);
-        claw.setPosition(0.3);
+        claw.setPosition(0);
 
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -53,6 +53,7 @@ public class ArmSubsystem implements BaseSubsystem {
         arm.setPower((arm.getCurrentPosition() - pos) * -1.001);
         while (blocking) {
             if (withinDeadband(arm.getCurrentPosition(), pos, 10)) {
+                arm.setPower(0);
                 return;
             }
         }
@@ -76,13 +77,13 @@ public class ArmSubsystem implements BaseSubsystem {
         arm.setPower(this.armOutput);
 
         if (clawPickupState) {
-            setClaw(0.3);
+            setClaw(0.18);
         }
         else {
             setClaw(0);
         }
         if (pivotPickupState) {
-            setPivot(0.36);
+            setPivot(0.32);
         }
         else {
             setPivot(0);

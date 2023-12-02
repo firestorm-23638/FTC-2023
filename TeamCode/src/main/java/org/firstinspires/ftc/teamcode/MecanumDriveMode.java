@@ -42,7 +42,7 @@ public class MecanumDriveMode extends LinearOpMode {
 
         while (opModeIsActive()) {
             drivetrain.setToValues(this.gamepad1.left_stick_x, this.gamepad1.left_stick_y, this.gamepad1.right_stick_x, 0);
-            arm.configArmState(this.gamepad1.a, this.gamepad1.b, this.gamepad1.left_trigger - this.gamepad1.right_trigger);
+            arm.configArmState(this.gamepad1.a, this.gamepad1.b, this.gamepad1.right_trigger - this.gamepad1.left_trigger);
 
             if (this.gamepad1.right_bumper) {
                 intakeMotor.setPower(0.8);
@@ -62,11 +62,11 @@ public class MecanumDriveMode extends LinearOpMode {
             }
 
             telemetry.addData("Climb motor encoder", climbMotor.getCurrentPosition());
-            if (this.gamepad1.dpad_down) {
-                climbMotor.setPower(1);
-            }
-            else if (this.gamepad1.dpad_up) {
+            if (this.gamepad1.x) {
                 climbMotor.setPower(-1);
+            }
+            else if (this.gamepad1.y) {
+                climbMotor.setPower(1);
             }
             else {
                 climbMotor.setPower(0);

@@ -12,6 +12,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class FindProp extends OpenCvPipeline {
     public int circleNum = 0;
     public Point recentCircle = new Point(-1, 0);
+    public double circleRadius = 0;
 
     @Override
     public Mat processFrame(Mat input) {
@@ -34,13 +35,17 @@ public class FindProp extends OpenCvPipeline {
 
         /* renders the circles to the stream image */
         circleNum = circles.cols();
+        double greatestRadius = 0;
         for (int i = 0; i < circles.cols(); i++) {
             double[] circle = circles.get(0, i);
             Point center = new Point(circle[0], circle[1]);
-            recentCircle = center;
             double radius = circle[2];
-
-            Imgproc.circle(input, center, (int)radius, new Scalar(255, 0, 255));
+            if (radius > 35) {
+                greatestRadius = radius;
+                circleRadius = radius;
+                recentCircle = center;
+                Imgproc.circle(input, center, (int)radius, new Scalar(255, 0, 255));
+            }
         }
         return input;
     }

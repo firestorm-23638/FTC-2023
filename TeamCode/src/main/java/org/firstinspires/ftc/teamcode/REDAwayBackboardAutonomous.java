@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 
 @Autonomous
-public class BLUETowardsBackboardAutonomous extends LinearOpMode {
+public class REDAwayBackboardAutonomous extends LinearOpMode {
     OpenCvWebcam camera;
     FindProp propLoc = new FindProp();
 
@@ -63,11 +63,11 @@ public class BLUETowardsBackboardAutonomous extends LinearOpMode {
                 .build();
 
         Trajectory inchToRight = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(6, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(8, 0, Math.toRadians(180)))
                 .build();
 
-        Trajectory goRight = sampleDrive.trajectoryBuilder(new Pose2d(6, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(26, -6, Math.toRadians(120)))
+        Trajectory goRight = sampleDrive.trajectoryBuilder(new Pose2d(8, 0, Math.toRadians(180)), true)
+                .lineToLinearHeading(new Pose2d(27, -5, Math.toRadians(120)))
                 .build();
 
         Trajectory backupToBackdrop = sampleDrive.trajectoryBuilder(new Pose2d(25, 10, Math.toRadians(180)), true)
@@ -78,33 +78,17 @@ public class BLUETowardsBackboardAutonomous extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(10, 0, Math.toRadians(180)))
                 .build();
 
-        Trajectory backupToBackdropRight = sampleDrive.trajectoryBuilder(new Pose2d(26, -6, Math.toRadians(120)), true)
-                .lineToLinearHeading(new Pose2d(10, 0, Math.toRadians(120)))
-                .build();
-
         Trajectory backdropLeft = sampleDrive.trajectoryBuilder(new Pose2d(10, 10, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(16, 36.5, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(16, 37, Math.toRadians(270)))
                 .build();
 
         Trajectory backdropMiddle = sampleDrive.trajectoryBuilder(new Pose2d(10, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(23, 36.5, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(18, 46, Math.toRadians(180)))
                 .build();
 
 
-        Trajectory backdropRight = sampleDrive.trajectoryBuilder(new Pose2d(26, -6, Math.toRadians(120)), true)
-                .lineToLinearHeading(new Pose2d(29, 36.5, Math.toRadians(270)))
-                .build();
-
-        Trajectory getOutOfTheWayLeft = sampleDrive.trajectoryBuilder(new Pose2d(16, 36, Math.toRadians(270)), true)
-                .strafeLeft(11)
-                .build();
-
-        Trajectory getOutOfTheWayMiddle = sampleDrive.trajectoryBuilder(new Pose2d(23, 36, Math.toRadians(270)), true)
-                .strafeLeft(18)
-                .build();
-
-        Trajectory getOutOfTheWayRight = sampleDrive.trajectoryBuilder(new Pose2d(29, 36, Math.toRadians(270)), true)
-                .strafeLeft(27)
+        Trajectory backdropRight = sampleDrive.trajectoryBuilder(new Pose2d(10, 10, Math.toRadians(120)), true)
+                .lineToLinearHeading(new Pose2d(20, 50, Math.toRadians(270)))
                 .build();
 
         waitForStart();
@@ -113,7 +97,6 @@ public class BLUETowardsBackboardAutonomous extends LinearOpMode {
 
         while (opModeIsActive()) {
             arm.setClaw(0);
-            telemetry.addData("circle rad", propLoc.circleRadius);
             if (hasCircle) {
                 /*if (circlePos == 1 && propLoc.circleNum == 0) {
 
@@ -142,37 +125,33 @@ public class BLUETowardsBackboardAutonomous extends LinearOpMode {
                 }*/
                 if (circlePos == 1) {
                     sampleDrive.followTrajectory(goLeft);
-                    sampleDrive.followTrajectory(backupToBackdrop);
-                    sampleDrive.followTrajectory(backdropLeft);
-                    arm.setArmPos(1050, true);
-                    arm.setClaw(0.18);
-                    arm.setArmPos(10, true);
-                    //sampleDrive.followTrajectory(getOutOfTheWayLeft);
+                    //sampleDrive.followTrajectory(backupToBackdrop);
+                    //sampleDrive.followTrajectory(backdropLeft);
+                    //arm.setArmPos(1000, true);
+                    //arm.setClaw(0.3);
+                    //arm.setArmPos(10, true);
                     return;
                 }
                 else if (circlePos == 2) {
                     sampleDrive.followTrajectory(placeMiddle);
-                    sampleDrive.followTrajectory(backupToBackdropMiddle);
-                   // sampleDrive.followTrajectory(backdropNearMiddle);
-                    sampleDrive.followTrajectory(backdropMiddle);
-                    arm.setArmPos(1050, true);
-                    arm.setClaw(0.18);
-                    arm.setArmPos(10, true);
-                    //sampleDrive.followTrajectory(getOutOfTheWayMiddle);
+                    //sampleDrive.followTrajectory(backupToBackdrop);
+                    // sampleDrive.followTrajectory(backdropNearMiddle);
+                    //sampleDrive.followTrajectory(backdropMiddle);
+                    //arm.setArmPos(1000, true);
+                    //arm.setClaw(0.3);
+                    //arm.setArmPos(10, true);
                     return;
                 }
                 else if (circlePos == 3) {
                     sampleDrive.followTrajectory(inchToRight);
                     sampleDrive.followTrajectory(goRight);
-                    //sampleDrive.followTrajectory(backupToBackdropRight);
-                    sampleDrive.followTrajectory(backdropRight);
-                    arm.setArmPos(1050, true);
-                    arm.setClaw(0.18);
-                    arm.setArmPos(10, true);
-                    //sampleDrive.followTrajectory(getOutOfTheWayRight);
+                    // sampleDrive.followTrajectory(backupToBackdrop);
+                    //sampleDrive.followTrajectory(backdropRight);
+                    //arm.setArmPos(1000, true);
+                    //arm.setClaw(0.3);
+                    //arm.setArmPos(10, true);
                     return;
                 }
-
 
             }
             else if (propLoc.circleNum > 0) {
