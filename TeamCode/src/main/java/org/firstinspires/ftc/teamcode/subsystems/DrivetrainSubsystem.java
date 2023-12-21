@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -16,10 +17,12 @@ public class DrivetrainSubsystem implements BaseSubsystem {
 
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
+    private Gamepad gamepad;
 
-    public DrivetrainSubsystem(HardwareMap map, Telemetry telemetry) {
+    public DrivetrainSubsystem(HardwareMap map, Telemetry telemetry, Gamepad gamepad) {
         this.hardwareMap = map;
         this.telemetry = telemetry;
+        this.gamepad = gamepad;
 
         this.frontLeftMotor = this.hardwareMap.get(DcMotorEx.class, "frontLeft");
         this.frontRightMotor = this.hardwareMap.get(DcMotorEx.class, "frontRight");
@@ -94,6 +97,11 @@ public class DrivetrainSubsystem implements BaseSubsystem {
     }
 
     public void loop() {
+        this.frontLeftAmt =  speedLimit * (this.gamepad.left_stick_y - this.gamepad.left_stick_x) - this.gamepad.right_stick_x * speedLimit;
+        this.frontRightAmt = speedLimit * (this.gamepad.left_stick_y + this.gamepad.left_stick_x) + this.gamepad.right_stick_x * speedLimit;
+        this.backLeftAmt =   speedLimit * (this.gamepad.left_stick_y + this.gamepad.left_stick_x) - this.gamepad.right_stick_x * speedLimit;
+        this.backRightAmt =  speedLimit * (this.gamepad.left_stick_y - this.gamepad.left_stick_x) + this.gamepad.right_stick_x * speedLimit;
+
         frontLeftMotor.setPower(this.frontLeftAmt);
         frontRightMotor.setPower(this.frontRightAmt);
         backLeftMotor.setPower(this.backLeftAmt);

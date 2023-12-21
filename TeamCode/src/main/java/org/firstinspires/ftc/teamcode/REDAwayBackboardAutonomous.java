@@ -25,7 +25,7 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
     FindProp propLoc = new FindProp();
 
     public void runOpMode() {
-        ArmSubsystem arm = new ArmSubsystem(this.hardwareMap, telemetry);
+        ArmSubsystem arm = new ArmSubsystem(this.hardwareMap, telemetry, this.gamepad2, true);
         int monitorId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam"), monitorId);

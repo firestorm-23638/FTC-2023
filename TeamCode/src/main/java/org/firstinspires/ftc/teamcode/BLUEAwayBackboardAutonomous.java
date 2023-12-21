@@ -25,7 +25,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
     FindProp propLoc = new FindProp();
 
     public void runOpMode() {
-        ArmSubsystem arm = new ArmSubsystem(this.hardwareMap, telemetry);
+        ArmSubsystem arm = new ArmSubsystem(this.hardwareMap, telemetry, this.gamepad2, true);
         int monitorId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam"), monitorId);
@@ -55,7 +55,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
         sampleDrive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
 
         Trajectory placeMiddle = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(28, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(27, 0, Math.toRadians(180)))
                 .build();
 
         Trajectory goRight = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
@@ -74,21 +74,50 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(10, 10, Math.toRadians(180)))
                 .build();
 
-        Trajectory backupToBackdropMiddle = sampleDrive.trajectoryBuilder(new Pose2d(28, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(10, 0, Math.toRadians(180)))
+        Trajectory prepareRightFromLeft = sampleDrive.trajectoryBuilder(new Pose2d(26, 6, Math.toRadians(240)), true)
+                .lineToLinearHeading(new Pose2d(20, 0, Math.toRadians(180)))
                 .build();
 
-        Trajectory backdropLeft = sampleDrive.trajectoryBuilder(new Pose2d(10, 10, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(16, 37, Math.toRadians(270)))
+        Trajectory prepareRightFromMiddle = sampleDrive.trajectoryBuilder(new Pose2d(27, 0, Math.toRadians(180)), true)
+                .lineToLinearHeading(new Pose2d(20, -20, Math.toRadians(180)))
                 .build();
 
-        Trajectory backdropMiddle = sampleDrive.trajectoryBuilder(new Pose2d(10, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(18, 46, Math.toRadians(270)))
+        Trajectory prepareRightFromRight = sampleDrive.trajectoryBuilder(new Pose2d(25, -8.5, Math.toRadians(180)), true)
+                .lineToLinearHeading(new Pose2d(20, 0, Math.toRadians(180)))
                 .build();
 
+        Trajectory lineUp = sampleDrive.trajectoryBuilder(new Pose2d(20, -20, Math.toRadians(180)), true)
+                .lineToLinearHeading(new Pose2d(52, -20, Math.toRadians(270)))
+                .build();
 
-        Trajectory backdropRight = sampleDrive.trajectoryBuilder(new Pose2d(10, 10, Math.toRadians(120)), true)
-                .lineToLinearHeading(new Pose2d(20, 50, Math.toRadians(270)))
+        Trajectory lineUpLeft = sampleDrive.trajectoryBuilder(new Pose2d(20, 0, Math.toRadians(180)), true)
+                .lineToLinearHeading(new Pose2d(58, 0, Math.toRadians(270)))
+                .build();
+
+        Trajectory lineUpRight = sampleDrive.trajectoryBuilder(new Pose2d(20, 0, Math.toRadians(180)), true)
+                .lineToLinearHeading(new Pose2d(56, 0, Math.toRadians(270)))
+                .build();
+
+        
+
+        Trajectory goToBackdropSide = sampleDrive.trajectoryBuilder(new Pose2d(52, -20, Math.toRadians(270)), true)
+                .lineToLinearHeading(new Pose2d(52, 65, Math.toRadians(270)))
+                .build();
+
+        Trajectory backdropLeft = sampleDrive.trajectoryBuilder(new Pose2d(52, 65, Math.toRadians(270)), true)
+                .lineToLinearHeading(new Pose2d(12, 84.5, Math.toRadians(270)))
+                .build();
+
+        Trajectory backdropMiddle = sampleDrive.trajectoryBuilder(new Pose2d(52, 65, Math.toRadians(270)), true)
+                .lineToLinearHeading(new Pose2d(22, 84.5, Math.toRadians(270)))
+                .build();
+
+        Trajectory backdropRight = sampleDrive.trajectoryBuilder(new Pose2d(52, 65, Math.toRadians(270)), true)
+                .lineToLinearHeading(new Pose2d(26, 84.5, Math.toRadians(270)))
+                .build();
+
+        Trajectory inchUpMiddle = sampleDrive.trajectoryBuilder(new Pose2d(22, 84.5, Math.toRadians(270)), true)
+                .forward(2)
                 .build();
 
         waitForStart();
@@ -132,26 +161,45 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                     arm.setArmPos(10, true);
                     return;*/
                     sampleDrive.followTrajectory(goRight);
+                    sampleDrive.followTrajectory(prepareRightFromRight);
+                    sampleDrive.followTrajectory(lineUp);
+                    sampleDrive.followTrajectory(goToBackdropSide);
+                    sampleDrive.followTrajectory(backdropRight);
+                    arm.setArmPos(1100, true);
+                    arm.setClaw(0.18);
+                    arm.setArmPos(10, true);
                     return;
                 }
                 else if (circlePos == 2) {
                     sampleDrive.followTrajectory(placeMiddle);
+                    sampleDrive.followTrajectory(prepareRightFromMiddle);
+                    sampleDrive.followTrajectory(lineUp);
+                    sampleDrive.followTrajectory(goToBackdropSide);
+                    sampleDrive.followTrajectory(backdropMiddle);
                     //sampleDrive.followTrajectory(backupToBackdropMiddle);
                     // sampleDrive.followTrajectory(backdropNearMiddle);
                     //sampleDrive.followTrajectory(backdropMiddle);
-                    //arm.setArmPos(1000, true);
-                    //arm.setClaw(0.3);
-                    //arm.setArmPos(10, true);
+                    arm.setArmPos(1100, true);
+                    arm.setClaw(0.18);
+                    sampleDrive.followTrajectory(inchUpMiddle);
+                    arm.setArmPos(10, true);
                     return;
                 }
                 else if (circlePos == 1) {
                     sampleDrive.followTrajectory(inchToLeft);
                     sampleDrive.followTrajectory(goLeft);
+                    sampleDrive.followTrajectory(prepareRightFromLeft);
+                    sampleDrive.followTrajectory(lineUpLeft);
+                    sampleDrive.followTrajectory(goToBackdropSide);
+                    sampleDrive.followTrajectory(backdropLeft);
                     // sampleDrive.followTrajectory(backupToBackdrop);
                     //sampleDrive.followTrajectory(backdropRight);
                     //arm.setArmPos(1000, true);
                     //arm.setClaw(0.3);
                     //arm.setArmPos(10, true);
+                    arm.setArmPos(1100, true);
+                    arm.setClaw(0.18);
+                    arm.setArmPos(10, true);
                     return;
                 }
 

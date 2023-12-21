@@ -49,7 +49,7 @@ public class AwayBackboardAutonomous extends LinearOpMode {
         boolean hasCircle = false;
 
         SampleMecanumDrive sampleDrive = new SampleMecanumDrive(hardwareMap);
-        DrivetrainSubsystem drive = new DrivetrainSubsystem(hardwareMap, telemetry);
+        DrivetrainSubsystem drive = new DrivetrainSubsystem(hardwareMap, telemetry, this.gamepad1);
 
         sampleDrive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
         Trajectory backup = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)

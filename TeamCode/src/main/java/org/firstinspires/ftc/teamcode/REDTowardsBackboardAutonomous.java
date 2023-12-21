@@ -25,7 +25,7 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
     FindProp propLoc = new FindProp();
 
     public void runOpMode() {
-        ArmSubsystem arm = new ArmSubsystem(this.hardwareMap, telemetry);
+        ArmSubsystem arm = new ArmSubsystem(this.hardwareMap, telemetry, this.gamepad2, true);
         int monitorId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam"), monitorId);
@@ -71,7 +71,7 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
                 .build();
 
         Trajectory backupToBackdrop = sampleDrive.trajectoryBuilder(new Pose2d(25, -8.5, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(10, -8.5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(18, -8.5, Math.toRadians(180)))
                 .build();
 
         Trajectory backupToBackdropMiddle = sampleDrive.trajectoryBuilder(new Pose2d(28, 0, Math.toRadians(180)), true)
@@ -90,7 +90,7 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(27, -36.5, Math.toRadians(90)))
                 .build();
 
-        Trajectory backdropRight = sampleDrive.trajectoryBuilder(new Pose2d(10, -8.5, Math.toRadians(180)), true)
+        Trajectory backdropRight = sampleDrive.trajectoryBuilder(new Pose2d(18, -8.5, Math.toRadians(180)), true)
                 .lineToLinearHeading(new Pose2d(18, -36.5, Math.toRadians(90)))
                 .build();
 
