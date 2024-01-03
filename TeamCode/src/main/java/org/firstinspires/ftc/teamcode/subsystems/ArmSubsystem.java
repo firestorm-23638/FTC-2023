@@ -16,11 +16,13 @@ public class ArmSubsystem implements BaseSubsystem {
     private boolean clawPickupState = false;
     private boolean pivotPickupState = false;
     private boolean twoControllerMode = false;
+    private boolean isJoystickOverride = false;
     private double armOutput = 0;
 
     private DcMotorEx arm;
     private Servo pivot;
-    private Servo claw;
+    private Servo leftClaw;
+    private Servo rightClaw;
 
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
@@ -39,15 +41,16 @@ public class ArmSubsystem implements BaseSubsystem {
         this.gamepad = gamepad;
         this.twoControllerMode = twoControllerMode;
 
-        pivot = this.hardwareMap.get(Servo.class, "clawServo");
-        claw = this.hardwareMap.get(Servo.class, "pivotServo");
+        pivot = this.hardwareMap.get(Servo.class, "pivot");
+        leftClaw = this.hardwareMap.get(Servo.class, "leftClaw");
+        rightClaw = this.hardwareMap.get(Servo.class, "rightClaw");
         arm = this.hardwareMap.get(DcMotorEx.class, "arm");
     }
 
     public void init() {
-
-        pivot.setPosition(0);
-        claw.setPosition(0);
+        pivot.setPosition(0.25);
+        leftClaw.setPosition(0.18);
+        rightClaw.setPosition(0);
 
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -65,42 +68,63 @@ public class ArmSubsystem implements BaseSubsystem {
     }
 
     public void setLeftClaw(double pos) {
-
+        leftClaw.setPosition(pos);
     }
 
     public void setRightClaw(double pos) {
-
+        rightClaw.setPosition(pos);
     }
 
-    public void setPivot(double pos) {
-        pivot.setPosition(pos);
-    }
+    public void setPivot(double pos) {pivot.setPosition(pos);}
 
     public void loop() {
         arm.setPower(this.gamepad.right_trigger - this.gamepad.left_trigger);
+        telemetry.addData("claw new pos", ((arm.getCurrentPosition() - 545) * 0.00055) - 0.13);
+        if (this.gamepad.right_stick_y != 0) {
+            setPivot((this.gamepad.right_stick_y + 1) * .2);
+        }
+        else {
+            if (arm.getCurrentPosition() > 545) {
+                if (((arm.getCurrentPosition() - 545) * 0.00055) - 0.13 == 0) {
+                    setPivot(0);
+                }
+                else {
+                    setPivot(((arm.getCurrentPosition() - 545) * 0.00055) - 0.13);
+                }
+            }
+            else {
+                if (this.gamepad.b) {
+                    setPivot(0.38);
+                }
+                else {
+                    setPivot(0.25);
+                }
+            }
+        }
 
         if (this.twoControllerMode) {
-            if (this.gamepad.a) {
-                setPivot(0.32);
+            if (this.gamepad.right_bumper) {
+                setLeftClaw(0.1);
             }
             else {
-                setPivot(0);
+                setLeftClaw(0.18);
             }
             if (this.gamepad.left_bumper) {
-                setLeftClaw(.3);
-            }
-            else {
-                setLeftClaw(0);
-            }
-            if (this.gamepad.right_bumper) {
-                setRightClaw(.3);
+                setRightClaw(0.12);
             }
             else {
                 setRightClaw(0);
             }
         }
         else {
-
+            if (this.gamepad.a) {
+                setLeftClaw(0.1);
+                setRightClaw(0.12);
+            }
+            else {
+                setLeftClaw(0.18);
+                setRightClaw(0);
+            }
         }
     }
 }

@@ -27,16 +27,14 @@ public class PlaneSubsystem implements BaseSubsystem {
 
     public void loop() {
         if (this.gamepad.back) {
-            tick ++;
             holdServo.setPosition(0);
-            if (tick > 400) {
+            if (this.gamepad.x) {
                 planeServo.setPosition(0);
             }
         }
         else {
-            planeServo.setPosition(0.5);
             holdServo.setPosition(0.13);
-            tick = 0;
+            planeServo.setPosition(0.5);
         }
     }
 }

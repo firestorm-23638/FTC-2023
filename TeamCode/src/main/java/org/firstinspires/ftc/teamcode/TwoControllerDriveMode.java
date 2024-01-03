@@ -16,7 +16,6 @@ public class TwoControllerDriveMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         DcMotorEx intakeMotor = this.hardwareMap.get(DcMotorEx.class, "intake");
-
         DcMotorEx climbMotor = this.hardwareMap.get(DcMotorEx.class, "climb");
 
         climbMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -35,10 +34,22 @@ public class TwoControllerDriveMode extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            if (this.gamepad1.right_bumper) {
+                intakeMotor.setPower(0.2);
+            }
+            else {
+                intakeMotor.setPower(this.gamepad1.right_trigger - this.gamepad1.left_trigger);
+            }
 
-            intakeMotor.setPower(this.gamepad1.left_trigger - this.gamepad1.right_trigger);
-
-           climbMotor.setPower(this.gamepad2.left_stick_y);
+            if (this.gamepad2.dpad_down) {
+                climbMotor.setPower(-1);
+            }
+            else if (this.gamepad2.dpad_up) {
+                climbMotor.setPower(1);
+            }
+            else {
+                climbMotor.setPower(0);
+            }
 
             arm.loop();
             drivetrain.loop();

@@ -123,7 +123,7 @@ public class BLUETowardsBackboardAutonomous extends LinearOpMode {
         //drive.init();
 
         while (opModeIsActive()) {
-            arm.setClaw(0);
+            arm.setLeftClaw(0);
             telemetry.addData("circle rad", propLoc.circleRadius);
             if (hasCircle) {
                 /*if (circlePos == 1 && propLoc.circleNum == 0) {
@@ -156,7 +156,7 @@ public class BLUETowardsBackboardAutonomous extends LinearOpMode {
                     sampleDrive.followTrajectory(backupToBackdrop);
                     sampleDrive.followTrajectory(backdropLeft);
                     arm.setArmPos(1075, true);
-                    arm.setClaw(0.18);
+                    arm.setLeftClaw(0.18);
                     sampleDrive.followTrajectory(shiftUpLeft);
                     sampleDrive.followTrajectory(getOutOfTheWayLeft);
                     arm.setArmPos(10, true);
@@ -168,7 +168,7 @@ public class BLUETowardsBackboardAutonomous extends LinearOpMode {
                    // sampleDrive.followTrajectory(backdropNearMiddle);
                     sampleDrive.followTrajectory(backdropMiddle);
                     arm.setArmPos(1075, true);
-                    arm.setClaw(0.18);
+                    arm.setLeftClaw(0.18);
                     sampleDrive.followTrajectory(shiftUpMiddle);
                     sampleDrive.followTrajectory(getOutOfTheWayMiddle);
                     arm.setArmPos(10, true);
@@ -180,7 +180,7 @@ public class BLUETowardsBackboardAutonomous extends LinearOpMode {
                     //sampleDrive.followTrajectory(backupToBackdropRight);
                     sampleDrive.followTrajectory(backdropRight);
                     arm.setArmPos(1075, true);
-                    arm.setClaw(0.18);
+                    arm.setLeftClaw(0.18);
                     sampleDrive.followTrajectory(shiftUpRight);
                     sampleDrive.followTrajectory(getOutOfTheWayRight);
                     arm.setArmPos(10, true);

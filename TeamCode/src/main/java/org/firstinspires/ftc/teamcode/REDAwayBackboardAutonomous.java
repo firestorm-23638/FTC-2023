@@ -96,7 +96,7 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
         //drive.init();
 
         while (opModeIsActive()) {
-            arm.setClaw(0);
+            arm.setLeftClaw(0);
             if (hasCircle) {
                 /*if (circlePos == 1 && propLoc.circleNum == 0) {
 

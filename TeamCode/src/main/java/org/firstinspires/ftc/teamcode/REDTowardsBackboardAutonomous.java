@@ -111,7 +111,7 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
         //drive.init();
 
         while (opModeIsActive()) {
-            arm.setClaw(0);
+            arm.setLeftClaw(0);
             if (hasCircle) {
                 /*if (circlePos == 1 && propLoc.circleNum == 0) {
 
@@ -150,7 +150,7 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
                     sampleDrive.followTrajectory(backupToBackdrop);
                     sampleDrive.followTrajectory(backdropRight);
                     arm.setArmPos(1050, true);
-                    arm.setClaw(0.18);
+                    arm.setLeftClaw(0.18);
                     arm.setArmPos(30, true);
                     //sampleDrive.followTrajectory(getOutOfTheWayRight);
                     return;
@@ -161,7 +161,7 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
                     // sampleDrive.followTrajectory(backdropNearMiddle);
                     sampleDrive.followTrajectory(backdropMiddle);
                     arm.setArmPos(1050, true);
-                    arm.setClaw(0.18);
+                    arm.setLeftClaw(0.18);
                     arm.setArmPos(30, true);
                     //sampleDrive.followTrajectory(getOutOfTheWayMiddle);
                     return;
@@ -172,7 +172,7 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
                     //sampleDrive.followTrajectory(backupToBackdropLeft);
                     sampleDrive.followTrajectory(backdropLeft);
                     arm.setArmPos(1050, true);
-                    arm.setClaw(0.18);
+                    arm.setLeftClaw(0.18);
                     arm.setArmPos(30, true);
                     //sampleDrive.followTrajectory(getOutOfTheWayLeft);
                     return;

@@ -125,7 +125,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
         //drive.init();
 
         while (opModeIsActive()) {
-            arm.setClaw(0);
+            arm.setLeftClaw(0);
             if (hasCircle) {
                 /*if (circlePos == 1 && propLoc.circleNum == 0) {
 
@@ -166,7 +166,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                     sampleDrive.followTrajectory(goToBackdropSide);
                     sampleDrive.followTrajectory(backdropRight);
                     arm.setArmPos(1100, true);
-                    arm.setClaw(0.18);
+                    arm.setLeftClaw(0.18);
                     arm.setArmPos(10, true);
                     return;
                 }
@@ -180,7 +180,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                     // sampleDrive.followTrajectory(backdropNearMiddle);
                     //sampleDrive.followTrajectory(backdropMiddle);
                     arm.setArmPos(1100, true);
-                    arm.setClaw(0.18);
+                    arm.setLeftClaw(0.18);
                     sampleDrive.followTrajectory(inchUpMiddle);
                     arm.setArmPos(10, true);
                     return;
@@ -198,7 +198,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                     //arm.setClaw(0.3);
                     //arm.setArmPos(10, true);
                     arm.setArmPos(1100, true);
-                    arm.setClaw(0.18);
+                    arm.setLeftClaw(0.18);
                     arm.setArmPos(10, true);
                     return;
                 }
