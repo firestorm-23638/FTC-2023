@@ -94,7 +94,7 @@ public class ArmSubsystem implements BaseSubsystem {
             }
             else {
                 if (this.gamepad.b) {
-                    setPivot(0.38);
+                    setPivot(0.46);
                 }
                 else {
                     setPivot(0.25);
@@ -104,13 +104,13 @@ public class ArmSubsystem implements BaseSubsystem {
 
         if (this.twoControllerMode) {
             if (this.gamepad.right_bumper) {
-                setLeftClaw(0.1);
+                setLeftClaw(0.07);
             }
             else {
                 setLeftClaw(0.18);
             }
             if (this.gamepad.left_bumper) {
-                setRightClaw(0.12);
+                setRightClaw(0.1);
             }
             else {
                 setRightClaw(0);
