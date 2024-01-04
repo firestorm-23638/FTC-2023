@@ -79,17 +79,17 @@ public class ArmSubsystem implements BaseSubsystem {
 
     public void loop() {
         arm.setPower(this.gamepad.right_trigger - this.gamepad.left_trigger);
-        telemetry.addData("claw new pos", ((arm.getCurrentPosition() - 545) * 0.00055) - 0.13);
+        telemetry.addData("claw new pos", ((arm.getCurrentPosition() - 550) * 0.00065) - 0.13);
         if (this.gamepad.right_stick_y != 0) {
             setPivot((this.gamepad.right_stick_y + 1) * .2);
         }
         else {
-            if (arm.getCurrentPosition() > 545) {
-                if (((arm.getCurrentPosition() - 545) * 0.00055) - 0.13 == 0) {
+            if (arm.getCurrentPosition() > 550) {
+                if (((arm.getCurrentPosition() - 550) * 0.00055) - 0.13 == 0) {
                     setPivot(0);
                 }
                 else {
-                    setPivot(((arm.getCurrentPosition() - 545) * 0.00055) - 0.13);
+                    setPivot(((arm.getCurrentPosition() - 550) * 0.00055) - 0.13);
                 }
             }
             else {
