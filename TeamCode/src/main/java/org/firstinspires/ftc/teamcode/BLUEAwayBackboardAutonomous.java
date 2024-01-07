@@ -75,7 +75,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                 .build();
 
         Trajectory prepareRightFromLeft = sampleDrive.trajectoryBuilder(new Pose2d(26, 6, Math.toRadians(240)), true)
-                .lineToLinearHeading(new Pose2d(20, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(20, -20, Math.toRadians(180)))
                 .build();
 
         Trajectory prepareRightFromMiddle = sampleDrive.trajectoryBuilder(new Pose2d(27, 0, Math.toRadians(180)), true)
@@ -87,36 +87,42 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                 .build();
 
         Trajectory lineUp = sampleDrive.trajectoryBuilder(new Pose2d(20, -20, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(52, -20, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(55, -20, Math.toRadians(270)))
                 .build();
 
-        Trajectory lineUpLeft = sampleDrive.trajectoryBuilder(new Pose2d(20, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(58, 0, Math.toRadians(270)))
+        Trajectory lineUpLeft = sampleDrive.trajectoryBuilder(new Pose2d(20, -20, Math.toRadians(180)), true)
+                .lineToLinearHeading(new Pose2d(57, -20, Math.toRadians(270)))
                 .build();
 
         Trajectory lineUpRight = sampleDrive.trajectoryBuilder(new Pose2d(20, 0, Math.toRadians(180)), true)
                 .lineToLinearHeading(new Pose2d(56, 0, Math.toRadians(270)))
                 .build();
 
-        
-
-        Trajectory goToBackdropSide = sampleDrive.trajectoryBuilder(new Pose2d(52, -20, Math.toRadians(270)), true)
-                .lineToLinearHeading(new Pose2d(52, 65, Math.toRadians(270)))
+        Trajectory goToBackdropSide = sampleDrive.trajectoryBuilder(new Pose2d(55, -20, Math.toRadians(270)), true)
+                .lineToLinearHeading(new Pose2d(55, 65, Math.toRadians(270)))
                 .build();
 
-        Trajectory backdropLeft = sampleDrive.trajectoryBuilder(new Pose2d(52, 65, Math.toRadians(270)), true)
-                .lineToLinearHeading(new Pose2d(12, 84.5, Math.toRadians(270)))
+        Trajectory goToBackdropSideLeft = sampleDrive.trajectoryBuilder(new Pose2d(57, -20, Math.toRadians(270)), true)
+                .lineToLinearHeading(new Pose2d(57, 65, Math.toRadians(270)))
                 .build();
 
-        Trajectory backdropMiddle = sampleDrive.trajectoryBuilder(new Pose2d(52, 65, Math.toRadians(270)), true)
-                .lineToLinearHeading(new Pose2d(22, 84.5, Math.toRadians(270)))
+        Trajectory backdropLeft = sampleDrive.trajectoryBuilder(new Pose2d(55, 65, Math.toRadians(270)), true)
+                .lineToLinearHeading(new Pose2d(16.5, 81.5, Math.toRadians(270)))
+                .build();
+
+        Trajectory backdropMiddle = sampleDrive.trajectoryBuilder(new Pose2d(55, 65, Math.toRadians(270)), true)
+                .lineToLinearHeading(new Pose2d(22, 80, Math.toRadians(270)))
                 .build();
 
         Trajectory backdropRight = sampleDrive.trajectoryBuilder(new Pose2d(52, 65, Math.toRadians(270)), true)
-                .lineToLinearHeading(new Pose2d(26, 84.5, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(26, 80, Math.toRadians(270)))
                 .build();
 
-        Trajectory inchUpMiddle = sampleDrive.trajectoryBuilder(new Pose2d(22, 84.5, Math.toRadians(270)), true)
+        Trajectory inchUpMiddle = sampleDrive.trajectoryBuilder(new Pose2d(22, 80, Math.toRadians(270)), true)
+                .forward(2)
+                .build();
+
+        Trajectory inchUpLeft = sampleDrive.trajectoryBuilder(new Pose2d(14, 81, Math.toRadians(270)), true)
                 .forward(2)
                 .build();
 
@@ -125,7 +131,6 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
         //drive.init();
 
         while (opModeIsActive()) {
-            arm.setLeftClaw(0);
             if (hasCircle) {
                 /*if (circlePos == 1 && propLoc.circleNum == 0) {
 
@@ -166,7 +171,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                     sampleDrive.followTrajectory(goToBackdropSide);
                     sampleDrive.followTrajectory(backdropRight);
                     arm.setArmPos(1100, true);
-                    arm.setLeftClaw(0.18);
+                    arm.setLeftClaw(0);
                     arm.setArmPos(10, true);
                     return;
                 }
@@ -180,7 +185,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                     // sampleDrive.followTrajectory(backdropNearMiddle);
                     //sampleDrive.followTrajectory(backdropMiddle);
                     arm.setArmPos(1100, true);
-                    arm.setLeftClaw(0.18);
+                    arm.setLeftClaw(0);
                     sampleDrive.followTrajectory(inchUpMiddle);
                     arm.setArmPos(10, true);
                     return;
@@ -190,7 +195,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                     sampleDrive.followTrajectory(goLeft);
                     sampleDrive.followTrajectory(prepareRightFromLeft);
                     sampleDrive.followTrajectory(lineUpLeft);
-                    sampleDrive.followTrajectory(goToBackdropSide);
+                    sampleDrive.followTrajectory(goToBackdropSideLeft);
                     sampleDrive.followTrajectory(backdropLeft);
                     // sampleDrive.followTrajectory(backupToBackdrop);
                     //sampleDrive.followTrajectory(backdropRight);
@@ -198,7 +203,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                     //arm.setClaw(0.3);
                     //arm.setArmPos(10, true);
                     arm.setArmPos(1100, true);
-                    arm.setLeftClaw(0.18);
+                    arm.setLeftClaw(0);
                     arm.setArmPos(10, true);
                     return;
                 }

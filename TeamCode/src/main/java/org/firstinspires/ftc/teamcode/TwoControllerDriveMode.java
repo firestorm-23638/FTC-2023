@@ -5,7 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ClimbSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneSubsystem;
 
@@ -16,20 +18,16 @@ public class TwoControllerDriveMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         DcMotorEx intakeMotor = this.hardwareMap.get(DcMotorEx.class, "intake");
-        DcMotorEx climbMotor = this.hardwareMap.get(DcMotorEx.class, "climb");
-
-        climbMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        climbMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         DrivetrainSubsystem drivetrain = new DrivetrainSubsystem(this.hardwareMap, telemetry, this.gamepad1);
         ArmSubsystem arm = new ArmSubsystem(this.hardwareMap, telemetry, this.gamepad2, true);
         PlaneSubsystem plane = new PlaneSubsystem(this.hardwareMap, this.gamepad2);
-
-        double speedLimit = 0.5;
+        ClimbSubsystem climb = new ClimbSubsystem(this.hardwareMap, telemetry, this.gamepad2);
 
         drivetrain.init();
         arm.init();
         plane.init();
+        climb.init();
 
         waitForStart();
 
@@ -41,19 +39,10 @@ public class TwoControllerDriveMode extends LinearOpMode {
                 intakeMotor.setPower(this.gamepad1.right_trigger - this.gamepad1.left_trigger);
             }
 
-            if (this.gamepad2.dpad_down) {
-                climbMotor.setPower(-1);
-            }
-            else if (this.gamepad2.dpad_up) {
-                climbMotor.setPower(1);
-            }
-            else {
-                climbMotor.setPower(0);
-            }
-
             arm.loop();
             drivetrain.loop();
             plane.loop();
+            climb.loop();
 
             telemetry.update();
         }

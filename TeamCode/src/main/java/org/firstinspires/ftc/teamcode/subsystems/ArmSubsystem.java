@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoControllerEx;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -23,6 +24,7 @@ public class ArmSubsystem implements BaseSubsystem {
     private Servo pivot;
     private Servo leftClaw;
     private Servo rightClaw;
+    private TouchSensor armSwitch;
 
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
@@ -45,6 +47,7 @@ public class ArmSubsystem implements BaseSubsystem {
         leftClaw = this.hardwareMap.get(Servo.class, "leftClaw");
         rightClaw = this.hardwareMap.get(Servo.class, "rightClaw");
         arm = this.hardwareMap.get(DcMotorEx.class, "arm");
+        armSwitch = this.hardwareMap.get(TouchSensor.class, "armSwitch");
     }
 
     public void init() {
@@ -78,7 +81,16 @@ public class ArmSubsystem implements BaseSubsystem {
     public void setPivot(double pos) {pivot.setPosition(pos);}
 
     public void loop() {
-        arm.setPower(this.gamepad.right_trigger - this.gamepad.left_trigger);
+        telemetry.addData("arm switch state", armSwitch.isPressed());
+        telemetry.addData("arm pos", arm.getCurrentPosition());
+        if (armSwitch.isPressed()) {
+            arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            arm.setPower(this.gamepad.right_trigger);
+        }
+        else {
+            arm.setPower(this.gamepad.right_trigger - this.gamepad.left_trigger);
+        }
         telemetry.addData("claw new pos", ((arm.getCurrentPosition() - 550) * 0.00065) - 0.13);
         if (this.gamepad.right_stick_y != 0) {
             setPivot((this.gamepad.right_stick_y + 1) * .2);

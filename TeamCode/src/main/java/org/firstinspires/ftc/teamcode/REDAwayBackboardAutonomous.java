@@ -18,7 +18,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-
+// you should see this :
 @Autonomous
 public class REDAwayBackboardAutonomous extends LinearOpMode {
     OpenCvWebcam camera;
@@ -96,7 +96,6 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
         //drive.init();
 
         while (opModeIsActive()) {
-            arm.setLeftClaw(0);
             if (hasCircle) {
                 /*if (circlePos == 1 && propLoc.circleNum == 0) {
 
