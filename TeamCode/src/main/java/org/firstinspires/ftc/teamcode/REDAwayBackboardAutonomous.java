@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.opencv.core.Point;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -54,7 +55,7 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
 
         sampleDrive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
 
-        Trajectory placeMiddle = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
+        Trajectory goMiddle = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
                 .lineToLinearHeading(new Pose2d(28, 0, Math.toRadians(180)))
                 .build();
 
@@ -91,39 +92,24 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(20, 50, Math.toRadians(270)))
                 .build();
 
+        TrajectorySequence placeLeft = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
+                .build();
+
+        TrajectorySequence placeMiddle = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
+                .build();
+
+        TrajectorySequence placeRight = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
+                .build();
+
         waitForStart();
         arm.init();
         //drive.init();
 
         while (opModeIsActive()) {
             if (hasCircle) {
-                /*if (circlePos == 1 && propLoc.circleNum == 0) {
-
-                }
-                else if (propLoc.circleNum > 0) {//!(activeCircle.x - 160 > -20 && activeCircle.x - 160 < 20)) {
-
-                }
-                else {
-                    //drive.zero();
-                    //drive.loop();
-                    //sampleDrive.followTrajectory(backup);
-                }*/
-                //sampleDrive.followTrajectory(backup);
-                //return;
-                /*if (circlePos == 1) {
-                    sampleDrive.followTrajectory(goLeft);
-                    return;
-                }
-                else if (circlePos == 2) {
-                    sampleDrive.followTrajectory(backup);
-                    return;
-                }
-                else if (circlePos == 3) {
-                    sampleDrive.followTrajectory(goRight);
-                    return;
-                }*/
                 if (circlePos == 1) {
-                    sampleDrive.followTrajectory(goLeft);
+                    sampleDrive.followTrajectorySequence(placeLeft);
+                    //sampleDrive.followTrajectory(goLeft);
                     //sampleDrive.followTrajectory(backupToBackdrop);
                     //sampleDrive.followTrajectory(backdropLeft);
                     //arm.setArmPos(1000, true);
@@ -132,7 +118,8 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
                     return;
                 }
                 else if (circlePos == 2) {
-                    sampleDrive.followTrajectory(placeMiddle);
+                    sampleDrive.followTrajectorySequence(placeMiddle);
+                    //sampleDrive.followTrajectory(placeMiddle);
                     //sampleDrive.followTrajectory(backupToBackdrop);
                     // sampleDrive.followTrajectory(backdropNearMiddle);
                     //sampleDrive.followTrajectory(backdropMiddle);
@@ -142,8 +129,9 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
                     return;
                 }
                 else if (circlePos == 3) {
-                    sampleDrive.followTrajectory(inchToRight);
-                    sampleDrive.followTrajectory(goRight);
+                    sampleDrive.followTrajectorySequence(placeRight);
+                    /*sampleDrive.followTrajectory(inchToRight);
+                    sampleDrive.followTrajectory(goRight);*/
                     // sampleDrive.followTrajectory(backupToBackdrop);
                     //sampleDrive.followTrajectory(backdropRight);
                     //arm.setArmPos(1000, true);

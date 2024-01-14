@@ -61,13 +61,30 @@ public class ArmSubsystem implements BaseSubsystem {
     }
 
     public void setArmPos(double pos, boolean blocking) {
-        arm.setPower((arm.getCurrentPosition() - pos) * -1.001);
         while (blocking) {
-            if (withinDeadband(arm.getCurrentPosition(), pos, 10)) {
+            double kf = 0.05;
+            if (arm.getCurrentPosition() > 330) {
+                kf *= -1;
+            }
+
+            double target = ((arm.getCurrentPosition() - pos) * -0.002) + kf;
+            if (target < -0.7) {
+                target = -0.7;
+            }
+            else if (target > 0.7) {
+                target = 0.7;
+            }
+
+            arm.setPower(target);
+            if (withinDeadband(arm.getCurrentPosition(), pos, 7)) {
                 arm.setPower(0);
                 return;
             }
         }
+    }
+
+    public void setRawArm(double perc) {
+        arm.setPower(perc);
     }
 
     public void setLeftClaw(double pos) {
@@ -89,6 +106,7 @@ public class ArmSubsystem implements BaseSubsystem {
             arm.setPower(this.gamepad.right_trigger);
         }
         else {
+            telemetry.addData("arm percent", this.gamepad.right_trigger - this.gamepad.left_trigger);
             arm.setPower(this.gamepad.right_trigger - this.gamepad.left_trigger);
         }
         telemetry.addData("claw new pos", ((arm.getCurrentPosition() - 550) * 0.00065) - 0.13);

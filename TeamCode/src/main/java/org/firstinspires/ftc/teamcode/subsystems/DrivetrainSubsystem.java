@@ -19,6 +19,8 @@ public class DrivetrainSubsystem implements BaseSubsystem {
     private Telemetry telemetry;
     private Gamepad gamepad;
 
+    private final boolean isInverted = true;
+
     public DrivetrainSubsystem(HardwareMap map, Telemetry telemetry, Gamepad gamepad) {
         this.hardwareMap = map;
         this.telemetry = telemetry;
@@ -100,18 +102,24 @@ public class DrivetrainSubsystem implements BaseSubsystem {
     public void loop() {
         telemetry.addData("joystick pos", Math.abs(this.gamepad.left_stick_x));
         if (Math.abs(this.gamepad.left_stick_x) < 0.7) {
-            this.frontLeftAmt =  speedLimit * (this.gamepad.left_stick_y - (this.gamepad.left_stick_x * 1.6)) - this.gamepad.right_stick_x * speedLimit;   // 1.7
-            this.frontRightAmt = speedLimit * (this.gamepad.left_stick_y + (this.gamepad.left_stick_x * 1.6)) + this.gamepad.right_stick_x * speedLimit;   // 1.7
-            this.backLeftAmt =   speedLimit * (this.gamepad.left_stick_y + (this.gamepad.left_stick_x * 1.85)) - this.gamepad.right_stick_x * speedLimit;   // 1.8
-            this.backRightAmt =  speedLimit * (this.gamepad.left_stick_y - (this.gamepad.left_stick_x * 1.85)) + this.gamepad.right_stick_x * speedLimit;   // 1.8
+            this.frontLeftAmt =  speedLimit * (this.gamepad.left_stick_y - (this.gamepad.left_stick_x * 1.6)) + this.gamepad.right_stick_x * speedLimit;   // 1.7
+            this.frontRightAmt = speedLimit * (this.gamepad.left_stick_y + (this.gamepad.left_stick_x * 1.6)) - this.gamepad.right_stick_x * speedLimit;   // 1.7
+            this.backLeftAmt =   speedLimit * (this.gamepad.left_stick_y + (this.gamepad.left_stick_x * 1.85)) + this.gamepad.right_stick_x * speedLimit;   // 1.8
+            this.backRightAmt =  speedLimit * (this.gamepad.left_stick_y - (this.gamepad.left_stick_x * 1.85)) - this.gamepad.right_stick_x * speedLimit;   // 1.8
         }
         else {
-            this.frontLeftAmt =  speedLimit * (this.gamepad.left_stick_y - (this.gamepad.left_stick_x * 1.6)) - this.gamepad.right_stick_x * speedLimit;   // 1.7
-            this.frontRightAmt = speedLimit * (this.gamepad.left_stick_y + (this.gamepad.left_stick_x * 1.6)) + this.gamepad.right_stick_x * speedLimit;   // 1.7
-            this.backLeftAmt =   speedLimit * (this.gamepad.left_stick_y + (this.gamepad.left_stick_x * 1.75)) - this.gamepad.right_stick_x * speedLimit;   // 1.8
-            this.backRightAmt =  speedLimit * (this.gamepad.left_stick_y - (this.gamepad.left_stick_x * 1.75)) + this.gamepad.right_stick_x * speedLimit;   // 1.8
+            this.frontLeftAmt =  speedLimit * (this.gamepad.left_stick_y - (this.gamepad.left_stick_x * 1.6)) + this.gamepad.right_stick_x * speedLimit;   // 1.7
+            this.frontRightAmt = speedLimit * (this.gamepad.left_stick_y + (this.gamepad.left_stick_x * 1.6)) - this.gamepad.right_stick_x * speedLimit;   // 1.7
+            this.backLeftAmt =   speedLimit * (this.gamepad.left_stick_y + (this.gamepad.left_stick_x * 1.75)) + this.gamepad.right_stick_x * speedLimit;   // 1.8
+            this.backRightAmt =  speedLimit * (this.gamepad.left_stick_y - (this.gamepad.left_stick_x * 1.75)) - this.gamepad.right_stick_x * speedLimit;   // 1.8
         }
 
+        if (isInverted) {
+            this.frontLeftAmt *= -1;
+            this.frontRightAmt *= -1;
+            this.backLeftAmt *= -1;
+            this.backRightAmt *= -1;
+        }
 
         frontLeftMotor.setPower(this.frontLeftAmt);
         frontRightMotor.setPower(this.frontRightAmt);

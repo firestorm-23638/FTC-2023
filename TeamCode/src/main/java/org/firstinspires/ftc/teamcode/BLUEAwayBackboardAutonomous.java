@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.opencv.core.Point;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -54,7 +55,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
 
         sampleDrive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
 
-        Trajectory placeMiddle = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
+        Trajectory goMiddle = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
                 .lineToLinearHeading(new Pose2d(27, 0, Math.toRadians(180)))
                 .build();
 
@@ -126,6 +127,32 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                 .forward(2)
                 .build();
 
+        TrajectorySequence placeLeft = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(6, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(26, 6, Math.toRadians(240)))
+                .lineToLinearHeading(new Pose2d(52, -10, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(52, 65, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(16.5, 81.5, Math.toRadians(270)))
+                .build();
+
+        TrajectorySequence placeMiddle = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(27, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(20, -20, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(52, -20, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(52, 65, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(22, 80, Math.toRadians(270)))
+                .build();
+
+        TrajectorySequence placeRight = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
+                .splineTo(new Vector2d(25, -8.5),0)
+                .lineToLinearHeading(new Pose2d(20, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(52, 0, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(52, 65, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(26, 80, Math.toRadians(270)))
+                .build();
+
+
+
         waitForStart();
         arm.init();
         //drive.init();
@@ -165,43 +192,45 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                     arm.setClaw(0.3);
                     arm.setArmPos(10, true);
                     return;*/
-                    sampleDrive.followTrajectory(goRight);
+                    /*sampleDrive.followTrajectory(goRight);
                     sampleDrive.followTrajectory(prepareRightFromRight);
                     sampleDrive.followTrajectory(lineUp);
                     sampleDrive.followTrajectory(goToBackdropSide);
-                    sampleDrive.followTrajectory(backdropRight);
+                    sampleDrive.followTrajectory(backdropRight);*/
+                    sampleDrive.followTrajectorySequence(placeRight);
                     arm.setArmPos(1100, true);
                     arm.setLeftClaw(0);
                     arm.setArmPos(10, true);
                     return;
                 }
                 else if (circlePos == 2) {
-                    sampleDrive.followTrajectory(placeMiddle);
+                    /*sampleDrive.followTrajectory(goMiddle);
                     sampleDrive.followTrajectory(prepareRightFromMiddle);
                     sampleDrive.followTrajectory(lineUp);
                     sampleDrive.followTrajectory(goToBackdropSide);
-                    sampleDrive.followTrajectory(backdropMiddle);
+                    sampleDrive.followTrajectory(backdropMiddle);*/
                     //sampleDrive.followTrajectory(backupToBackdropMiddle);
                     // sampleDrive.followTrajectory(backdropNearMiddle);
                     //sampleDrive.followTrajectory(backdropMiddle);
+                    sampleDrive.followTrajectorySequence(placeMiddle);
                     arm.setArmPos(1100, true);
                     arm.setLeftClaw(0);
-                    sampleDrive.followTrajectory(inchUpMiddle);
                     arm.setArmPos(10, true);
                     return;
                 }
                 else if (circlePos == 1) {
-                    sampleDrive.followTrajectory(inchToLeft);
+                    /*sampleDrive.followTrajectory(inchToLeft);
                     sampleDrive.followTrajectory(goLeft);
                     sampleDrive.followTrajectory(prepareRightFromLeft);
                     sampleDrive.followTrajectory(lineUpLeft);
                     sampleDrive.followTrajectory(goToBackdropSideLeft);
-                    sampleDrive.followTrajectory(backdropLeft);
+                    sampleDrive.followTrajectory(backdropLeft);*/
                     // sampleDrive.followTrajectory(backupToBackdrop);
                     //sampleDrive.followTrajectory(backdropRight);
                     //arm.setArmPos(1000, true);
                     //arm.setClaw(0.3);
                     //arm.setArmPos(10, true);
+                    sampleDrive.followTrajectorySequence(placeLeft);
                     arm.setArmPos(1100, true);
                     arm.setLeftClaw(0);
                     arm.setArmPos(10, true);
