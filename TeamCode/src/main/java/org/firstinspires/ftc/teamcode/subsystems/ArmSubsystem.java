@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import android.app.ListActivity;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -13,12 +15,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 public class ArmSubsystem implements BaseSubsystem {
-
-    private boolean clawPickupState = false;
-    private boolean pivotPickupState = false;
     private boolean twoControllerMode = false;
-    private boolean isJoystickOverride = false;
-    private double armOutput = 0;
+    private boolean isAtGoal = true;
+    private boolean armGarageButtonState = false;
+
+    private double armGarageTarget = 0;
 
     private DcMotorEx arm;
     private Servo pivot;
@@ -60,27 +61,47 @@ public class ArmSubsystem implements BaseSubsystem {
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void setArmPos(double pos, boolean blocking) {
+    public double calculatePIDOutput(double armPos, double t) {
+        //double kf = 0.05;
+
+        //if (armPos > 330) {
+        //    kf *= -1;
+        //}
+
+        double target = ((armPos - t) * -0.022);
+
+        if (target < -1) {
+            target = -1;
+        }
+        else if (target > 1) {
+            target = 1;
+        }
+
+        return target;
+    }
+
+    public boolean setArmPos(double pos, boolean blocking) {
+        arm.setPower(calculatePIDOutput(arm.getCurrentPosition(), pos));
         while (blocking) {
-            double kf = 0.05;
-            if (arm.getCurrentPosition() > 330) {
-                kf *= -1;
-            }
 
-            double target = ((arm.getCurrentPosition() - pos) * -0.002) + kf;
-            if (target < -0.7) {
-                target = -0.7;
-            }
-            else if (target > 0.7) {
-                target = 0.7;
-            }
-
-            arm.setPower(target);
+            arm.setPower(calculatePIDOutput(arm.getCurrentPosition(), pos));
             if (withinDeadband(arm.getCurrentPosition(), pos, 7)) {
                 arm.setPower(0);
-                return;
+                return true;
             }
         }
+        return withinDeadband(arm.getCurrentPosition(), pos, 7);
+    }
+
+    public boolean armGarageButtonPressed() {
+        if (!this.gamepad.a) {
+            armGarageButtonState = true;
+        }
+        else if (armGarageButtonState) {
+            armGarageButtonState = false;
+            return true;
+        }
+        return false;
     }
 
     public void setRawArm(double perc) {
@@ -97,29 +118,64 @@ public class ArmSubsystem implements BaseSubsystem {
 
     public void setPivot(double pos) {pivot.setPosition(pos);}
 
+    public void openLeftClaw() {
+        setLeftClaw(0.07);
+    }
+
+    public void closeLeftClaw() {
+        setLeftClaw(0.18);
+    }
+
+    public void openRightClaw() {
+        setRightClaw(0.1);
+    }
+
+    public void closeRightClaw() {
+        setRightClaw(0);
+    }
+
     public void loop() {
-        telemetry.addData("arm switch state", armSwitch.isPressed());
-        telemetry.addData("arm pos", arm.getCurrentPosition());
+        telemetry.addData("is at goal", isAtGoal);
+
+        if (armGarageButtonPressed()) {
+            isAtGoal = false;
+            if (armGarageTarget == 0) {
+                armGarageTarget = 950;
+            }
+            else {
+                armGarageTarget = 0;
+            }
+        }
+
+        if (!isAtGoal) {
+            isAtGoal = setArmPos(armGarageTarget, false);
+        }
+
+
         if (armSwitch.isPressed()) {
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            arm.setPower(this.gamepad.right_trigger);
+            if (isAtGoal) {
+                arm.setPower(this.gamepad.right_trigger);
+            }
+
         }
         else {
-            telemetry.addData("arm percent", this.gamepad.right_trigger - this.gamepad.left_trigger);
-            arm.setPower(this.gamepad.right_trigger - this.gamepad.left_trigger);
+            if (isAtGoal) {
+                arm.setPower(this.gamepad.right_trigger - this.gamepad.left_trigger);
+            }
         }
-        telemetry.addData("claw new pos", ((arm.getCurrentPosition() - 550) * 0.00065) - 0.13);
+
         if (this.gamepad.right_stick_y != 0) {
             setPivot((this.gamepad.right_stick_y + 1) * .2);
         }
         else {
-            if (arm.getCurrentPosition() > 550) {
-                if (((arm.getCurrentPosition() - 550) * 0.00055) - 0.13 == 0) {
+            if (arm.getCurrentPosition() > 450) {
+                if (((arm.getCurrentPosition() - 450) * 0.0006) - 0.13 == 0) {
                     setPivot(0);
                 }
                 else {
-                    setPivot(((arm.getCurrentPosition() - 550) * 0.00055) - 0.13);
+                    setPivot(((arm.getCurrentPosition() - 450) * 0.0006) - 0.13);
                 }
             }
             else {
@@ -134,26 +190,26 @@ public class ArmSubsystem implements BaseSubsystem {
 
         if (this.twoControllerMode) {
             if (this.gamepad.right_bumper) {
-                setLeftClaw(0.07);
+                openLeftClaw();
             }
             else {
-                setLeftClaw(0.18);
+                closeLeftClaw();
             }
             if (this.gamepad.left_bumper) {
-                setRightClaw(0.1);
+                openRightClaw();
             }
             else {
-                setRightClaw(0);
+                closeRightClaw();
             }
         }
         else {
             if (this.gamepad.a) {
-                setLeftClaw(0.1);
-                setRightClaw(0.12);
+                openLeftClaw();
+                openRightClaw();
             }
             else {
-                setLeftClaw(0.18);
-                setRightClaw(0);
+                closeLeftClaw();
+                closeRightClaw();
             }
         }
     }
