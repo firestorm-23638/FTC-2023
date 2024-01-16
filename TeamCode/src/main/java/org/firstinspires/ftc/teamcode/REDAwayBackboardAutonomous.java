@@ -25,15 +25,6 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
     OpenCvWebcam camera;
     FindProp propLoc = new FindProp();
 
-    public void waitSeconds(double s) {
-        double t = time;
-        while (true) {
-            if (t + s <= time) {
-                return;
-            }
-        }
-    }
-
     public void runOpMode() {
         ArmSubsystem arm = new ArmSubsystem(this.hardwareMap, telemetry, this.gamepad2, true);
         int monitorId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -102,40 +93,12 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
                 .build();
 
         TrajectorySequence placeLeft = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
-                .setReversed(true)
-                .splineTo(new Vector2d(25, 8.5),0)
-                /*.lineToLinearHeading(new Pose2d(20, 0, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(52, 0, Math.toRadians(270)))
-                .lineToLinearHeading(new Pose2d(52, -65, Math.toRadians(270)))
-                .lineToLinearHeading(new Pose2d(26, -80, Math.toRadians(270)))*/
                 .build();
 
         TrajectorySequence placeMiddle = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(27, 0, Math.toRadians(180)))
-                /*.lineToLinearHeading(new Pose2d(20, 20, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(52, 20, Math.toRadians(270)))
-                .lineToLinearHeading(new Pose2d(52, -65, Math.toRadians(270)))
-                .lineToLinearHeading(new Pose2d(22, -80, Math.toRadians(270)))*/
                 .build();
 
         TrajectorySequence placeRight = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(6, 0, Math.toRadians(180)))
-                /*.lineToLinearHeading(new Pose2d(26, -6, Math.toRadians(240)))
-                .lineToLinearHeading(new Pose2d(52, 5, Math.toRadians(270)))
-                .lineToLinearHeading(new Pose2d(52, -65, Math.toRadians(270)))
-                .lineToLinearHeading(new Pose2d(16.5, -80, Math.toRadians(270)))*/
-                .build();
-
-        TrajectorySequence comeForwardLeft = sampleDrive.trajectorySequenceBuilder(new Pose2d(16.5, 80, Math.toRadians(270)))
-                .forward(3)
-                .build();
-
-        TrajectorySequence comeForwardMiddle = sampleDrive.trajectorySequenceBuilder(new Pose2d(22, 80, Math.toRadians(270)))
-                .forward(3)
-                .build();
-
-        TrajectorySequence comeForwardRight = sampleDrive.trajectorySequenceBuilder(new Pose2d(26, 80, Math.toRadians(270)))
-                .forward(3)
                 .build();
 
         waitForStart();
@@ -143,38 +106,37 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
         //drive.init();
 
         while (opModeIsActive()) {
-            arm.closeLeftClaw();
-            arm.closeRightClaw();
-
             if (hasCircle) {
                 if (circlePos == 1) {
                     sampleDrive.followTrajectorySequence(placeLeft);
-                    arm.setArmPos(530, true);
-                    waitSeconds(0.5);
-                    arm.openLeftClaw();
-                    arm.openRightClaw();
-                    waitSeconds(0.5);
-                    arm.setArmPos(10, true);
+                    //sampleDrive.followTrajectory(goLeft);
+                    //sampleDrive.followTrajectory(backupToBackdrop);
+                    //sampleDrive.followTrajectory(backdropLeft);
+                    //arm.setArmPos(1000, true);
+                    //arm.setClaw(0.3);
+                    //arm.setArmPos(10, true);
                     return;
                 }
                 else if (circlePos == 2) {
                     sampleDrive.followTrajectorySequence(placeMiddle);
-                    arm.setArmPos(530, true);
-                    waitSeconds(0.5);
-                    arm.openLeftClaw();
-                    arm.openRightClaw();
-                    waitSeconds(0.5);
-                    arm.setArmPos(10, true);
+                    //sampleDrive.followTrajectory(placeMiddle);
+                    //sampleDrive.followTrajectory(backupToBackdrop);
+                    // sampleDrive.followTrajectory(backdropNearMiddle);
+                    //sampleDrive.followTrajectory(backdropMiddle);
+                    //arm.setArmPos(1000, true);
+                    //arm.setClaw(0.3);
+                    //arm.setArmPos(10, true);
                     return;
                 }
                 else if (circlePos == 3) {
                     sampleDrive.followTrajectorySequence(placeRight);
-                    arm.setArmPos(530, true);
-                    waitSeconds(0.5);
-                    arm.openLeftClaw();
-                    arm.openRightClaw();
-                    waitSeconds(0.5);
-                    arm.setArmPos(10, true);
+                    /*sampleDrive.followTrajectory(inchToRight);
+                    sampleDrive.followTrajectory(goRight);*/
+                    // sampleDrive.followTrajectory(backupToBackdrop);
+                    //sampleDrive.followTrajectory(backdropRight);
+                    //arm.setArmPos(1000, true);
+                    //arm.setClaw(0.3);
+                    //arm.setArmPos(10, true);
                     return;
                 }
 
