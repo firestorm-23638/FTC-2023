@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -19,17 +20,21 @@ public class IntakeSubsystem implements BaseSubsystem {
 
     public void init() {
         this.motor = this.hardwareMap.get(DcMotorEx.class, "intake");
+        this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void loop() {
         if (gamepad.right_bumper) {
-            motor.setPower(0.3);
+            motor.setPower(0.5);
         }
         else if (gamepad.left_bumper) {
-            motor.setPower(-0.3);
+            motor.setPower(-0.5);
         }
         else {
             motor.setPower(0);
         }
     }
 }
+
+
