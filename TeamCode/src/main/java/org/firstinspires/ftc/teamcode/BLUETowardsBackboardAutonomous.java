@@ -132,39 +132,51 @@ public class BLUETowardsBackboardAutonomous extends LinearOpMode {
         TrajectorySequence placeLeft = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
                 .setReversed(true)
                 .splineTo(new Vector2d(25, 8.5),0)
-                .lineToLinearHeading(new Pose2d(22, 8.5, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(18.5, 32.5, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(15, 8.5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(18.5, 35, Math.toRadians(270)))
                 .build();
 
         TrajectorySequence placeMiddle = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(27, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(30, 0, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(21, 0, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(22, 32.5, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(22, 34, Math.toRadians(270)))
                 .build();
 
         TrajectorySequence placeRight = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(6, 0, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(26.5, -6.5, Math.toRadians(120)))
                 .forward(20)
-                .lineToLinearHeading(new Pose2d(31, 33, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(31, 35, Math.toRadians(270)))
                 .build();
 
-        TrajectorySequence moveAwayLeft = sampleDrive.trajectorySequenceBuilder((new Pose2d(16, 32.5, Math.toRadians(270))))
+        TrajectorySequence moveAwayLeft = sampleDrive.trajectorySequenceBuilder((new Pose2d(18.5, 32.5, Math.toRadians(270))))
                 .forward(3)
                 .strafeRight(24)
-                .back(3)
+                .back(6)
                 .build();
 
-        TrajectorySequence moveAwayMiddle = sampleDrive.trajectorySequenceBuilder((new Pose2d(21, 32.5, Math.toRadians(270))))
+        TrajectorySequence moveAwayMiddle = sampleDrive.trajectorySequenceBuilder((new Pose2d(22, 32.5, Math.toRadians(270))))
                 .forward(3)
-                .strafeRight(30)
-                .back(3)
+                .strafeRight(32)
+                .back(6)
                 .build();
 
-        TrajectorySequence moveAwayRight = sampleDrive.trajectorySequenceBuilder((new Pose2d(29, 32.5, Math.toRadians(270))))
+        TrajectorySequence moveAwayRight = sampleDrive.trajectorySequenceBuilder(new Pose2d(31, 34.25, Math.toRadians(270)))
                 .forward(3)
                 .strafeRight(38)
-                .back(3)
+                .back(6)
+                .build();
+
+        TrajectorySequence forwardLeft = sampleDrive.trajectorySequenceBuilder(placeLeft.end())
+                .forward(3)
+                .build();
+
+        TrajectorySequence forwardMiddle = sampleDrive.trajectorySequenceBuilder(placeMiddle.end())
+                .forward(3)
+                .build();
+
+        TrajectorySequence forwardRight = sampleDrive.trajectorySequenceBuilder(placeRight.end())
+                .forward(3)
                 .build();
 
         waitForStart();
@@ -172,39 +184,38 @@ public class BLUETowardsBackboardAutonomous extends LinearOpMode {
         //drive.init();
 
         while (opModeIsActive()) {
+            arm.setPivot(0.17);
             arm.closeLeftClaw();
             arm.closeRightClaw();
-
-            arm.setPivot(0.2);
 
             if (hasCircle) {
                 if (circlePos == 1) {
                     sampleDrive.followTrajectorySequence(placeLeft);
-                    arm.setArmPos(935, true);
+                    arm.setArmPos(910, true);
                     waitSeconds(0.5);
                     arm.openLeftClaw();
                     arm.openRightClaw();
-                    sampleDrive.followTrajectorySequence(moveAwayLeft);
+                    sampleDrive.followTrajectorySequence(forwardLeft);
                     arm.setArmPos(10, true);
                     return;
                 }
                 else if (circlePos == 2) {
                     sampleDrive.followTrajectorySequence(placeMiddle);
-                    arm.setArmPos(935, true);
+                    arm.setArmPos(910, true);
                     waitSeconds(0.5);
                     arm.openLeftClaw();
                     arm.openRightClaw();
-                    sampleDrive.followTrajectorySequence(moveAwayMiddle);
+                    sampleDrive.followTrajectorySequence(forwardMiddle);
                     arm.setArmPos(10, true);
                     return;
                 }
                 else if (circlePos == 3) {
                     sampleDrive.followTrajectorySequence(placeRight);
-                    arm.setArmPos(935, true);
+                    arm.setArmPos(910, true);
                     waitSeconds(0.5);
                     arm.openLeftClaw();
                     arm.openRightClaw();
-                    sampleDrive.followTrajectorySequence(moveAwayRight);
+                    sampleDrive.followTrajectorySequence(forwardRight);
                     arm.setArmPos(10, true);
                     return;
                 }

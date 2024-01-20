@@ -111,7 +111,7 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
                 .build();
 
         TrajectorySequence placeMiddle = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(27, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(30, 0, Math.toRadians(180)))
                 /*.lineToLinearHeading(new Pose2d(20, 20, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(52, 20, Math.toRadians(270)))
                 .lineToLinearHeading(new Pose2d(52, -65, Math.toRadians(270)))
@@ -120,6 +120,7 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
 
         TrajectorySequence placeRight = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(6, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(26, -6, Math.toRadians(120)))
                 /*.lineToLinearHeading(new Pose2d(26, -6, Math.toRadians(240)))
                 .lineToLinearHeading(new Pose2d(52, 5, Math.toRadians(270)))
                 .lineToLinearHeading(new Pose2d(52, -65, Math.toRadians(270)))
@@ -149,32 +150,32 @@ public class REDAwayBackboardAutonomous extends LinearOpMode {
             if (hasCircle) {
                 if (circlePos == 1) {
                     sampleDrive.followTrajectorySequence(placeLeft);
-                    arm.setArmPos(530, true);
+                    /*arm.setArmPos(530, true);
                     waitSeconds(0.5);
                     arm.openLeftClaw();
                     arm.openRightClaw();
                     waitSeconds(0.5);
-                    arm.setArmPos(10, true);
+                    arm.setArmPos(10, true);*/
                     return;
                 }
                 else if (circlePos == 2) {
                     sampleDrive.followTrajectorySequence(placeMiddle);
-                    arm.setArmPos(530, true);
+                    /*arm.setArmPos(530, true);
                     waitSeconds(0.5);
                     arm.openLeftClaw();
                     arm.openRightClaw();
                     waitSeconds(0.5);
-                    arm.setArmPos(10, true);
+                    arm.setArmPos(10, true);*/
                     return;
                 }
                 else if (circlePos == 3) {
                     sampleDrive.followTrajectorySequence(placeRight);
-                    arm.setArmPos(530, true);
+                    /*arm.setArmPos(530, true);
                     waitSeconds(0.5);
                     arm.openLeftClaw();
                     arm.openRightClaw();
                     waitSeconds(0.5);
-                    arm.setArmPos(10, true);
+                    arm.setArmPos(10, true);*/
                     return;
                 }
 

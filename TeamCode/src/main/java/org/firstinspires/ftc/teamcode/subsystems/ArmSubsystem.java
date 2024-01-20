@@ -171,11 +171,11 @@ public class ArmSubsystem implements BaseSubsystem {
         }
         else {
             if (arm.getCurrentPosition() > 450) {
-                if (((arm.getCurrentPosition() - 450) * 0.00071) - 0.13 == 0) {
+                if (((arm.getCurrentPosition() - 450) * 0.00076) - 0.13 == 0) {
                     setPivot(0);
                 }
                 else {
-                    setPivot(((arm.getCurrentPosition() - 450) * 0.00071) - 0.13);
+                    setPivot(((arm.getCurrentPosition() - 450) * 0.00076) - 0.13);
                 }
             }
             else {

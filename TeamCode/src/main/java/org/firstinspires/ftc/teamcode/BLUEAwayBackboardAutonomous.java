@@ -138,6 +138,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
 
         TrajectorySequence placeLeft = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(6, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(26, 6, Math.toRadians(240)))
                 /*.lineToLinearHeading(new Pose2d(26, 6, Math.toRadians(240)))
                 .lineToLinearHeading(new Pose2d(16, 0, Math.toRadians(240)))
                 .lineToLinearHeading(new Pose2d(56, -5, Math.toRadians(270)))
@@ -146,7 +147,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                 .build();
 
         TrajectorySequence placeMiddle = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(27, 0, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(30, 0, Math.toRadians(180)))
                 /*.lineToLinearHeading(new Pose2d(17, 0, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(17, -23, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(56, -23, Math.toRadians(270)))
@@ -208,6 +209,7 @@ public class BLUEAwayBackboardAutonomous extends LinearOpMode {
                     return;
                 }
                 else if (circlePos == 1) {
+                    sampleDrive.followTrajectorySequence(placeLeft);
                     /*sampleDrive.followTrajectorySequence(placeLeft);
                     arm.setArmPos(530, true);
                     waitSeconds(0.5);
