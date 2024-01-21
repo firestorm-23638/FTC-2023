@@ -11,8 +11,6 @@ public class PlaneSubsystem implements BaseSubsystem {
     private Servo planeServo;
     private Servo holdServo;
 
-    private double tick = 0;
-
     public PlaneSubsystem(HardwareMap hardwareMap, Gamepad gamepad) {
         planeServo = hardwareMap.get(Servo.class, "planeServo");
         holdServo = hardwareMap.get(Servo.class, "holdServo");
@@ -28,6 +26,7 @@ public class PlaneSubsystem implements BaseSubsystem {
     public void loop() {
         if (this.gamepad.back) {
             holdServo.setPosition(0);
+
             if (this.gamepad.x) {
                 planeServo.setPosition(0);
             }
