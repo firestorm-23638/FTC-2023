@@ -22,9 +22,11 @@ public class ArmSubsystem implements BaseSubsystem {
     private double armGarageTarget = 0;
 
     private DcMotorEx arm;
+
     private Servo pivot;
     private Servo leftClaw;
     private Servo rightClaw;
+
     private TouchSensor armSwitch;
 
     private HardwareMap hardwareMap;
@@ -36,6 +38,14 @@ public class ArmSubsystem implements BaseSubsystem {
     private boolean withinDeadband(double n, double r, double d) {
         n -= r;
         return (n < d) && (n > -d);
+    }
+
+    private void setLeftClaw(double pos) {
+        leftClaw.setPosition(pos);
+    }
+
+    private void setRightClaw(double pos) {
+        rightClaw.setPosition(pos);
     }
 
     public ArmSubsystem(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad, boolean twoControllerMode) {
@@ -62,12 +72,6 @@ public class ArmSubsystem implements BaseSubsystem {
     }
 
     public double calculatePIDOutput(double armPos, double t) {
-        //double kf = 0.05;
-
-        //if (armPos > 330) {
-        //    kf *= -1;
-        //}
-
         double target = ((armPos - t) * -0.022);
 
         if (target < -1) {
@@ -83,7 +87,6 @@ public class ArmSubsystem implements BaseSubsystem {
     public boolean setArmPos(double pos, boolean blocking) {
         arm.setPower(calculatePIDOutput(arm.getCurrentPosition(), pos));
         while (blocking) {
-
             arm.setPower(calculatePIDOutput(arm.getCurrentPosition(), pos));
             if (withinDeadband(arm.getCurrentPosition(), pos, 7)) {
                 arm.setPower(0);
@@ -102,18 +105,6 @@ public class ArmSubsystem implements BaseSubsystem {
             return true;
         }
         return false;
-    }
-
-    public void setRawArm(double perc) {
-        arm.setPower(perc);
-    }
-
-    public void setLeftClaw(double pos) {
-        leftClaw.setPosition(pos);
-    }
-
-    public void setRightClaw(double pos) {
-        rightClaw.setPosition(pos);
     }
 
     public void setPivot(double pos) {pivot.setPosition(pos);}
@@ -151,14 +142,13 @@ public class ArmSubsystem implements BaseSubsystem {
             isAtGoal = setArmPos(armGarageTarget, false);
         }
 
-
         if (armSwitch.isPressed()) {
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
             if (isAtGoal) {
                 arm.setPower(this.gamepad.right_trigger);
             }
-
         }
         else {
             if (isAtGoal) {

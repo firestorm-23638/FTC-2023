@@ -18,9 +18,6 @@ public class OneControllerDriveMode extends LinearOpMode {
 
         DcMotorEx intakeMotor = this.hardwareMap.get(DcMotorEx.class, "intake");
         DcMotorEx climbMotor = this.hardwareMap.get(DcMotorEx.class, "climb");
-        //Servo pivotServo = this.hardwareMap.get(Servo.class, "pivot");
-        //Servo leftclaw = this.hardwareMap.get(Servo.class, "leftClaw");
-        //Servo rightclaw = this.hardwareMap.get(Servo.class, "rightClaw");
 
         climbMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         climbMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -29,8 +26,6 @@ public class OneControllerDriveMode extends LinearOpMode {
         ArmSubsystem arm = new ArmSubsystem(this.hardwareMap, telemetry, this.gamepad1, false);
         PlaneSubsystem plane = new PlaneSubsystem(this.hardwareMap, this.gamepad1);
 
-        double speedLimit = 0.5;
-
         drivetrain.init();
         arm.init();
         plane.init();
@@ -38,10 +33,6 @@ public class OneControllerDriveMode extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            //pivotServo.setPosition(0);
-            //leftclaw.setPosition(0);
-            //rightclaw.setPosition(0);
-
             if (this.gamepad1.dpad_down) {
                 climbMotor.setPower(-1);
             }

@@ -52,69 +52,13 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
 
             }
         });
-
-        long circleTick = 0;
         int circlePos = -1;
-
-        Point activeCircle = new Point(0, 0);
 
         boolean hasCircle = false;
 
         SampleMecanumDrive sampleDrive = new SampleMecanumDrive(hardwareMap);
 
         sampleDrive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
-
-        Trajectory goMiddle = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(28, 0, Math.toRadians(180)))
-                .build();
-
-        Trajectory goRight = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
-                .splineTo(new Vector2d(25, -8.5),0)
-                .build();
-
-        Trajectory inchToLeft = sampleDrive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(6, 0, Math.toRadians(180)))
-                .build();
-
-        Trajectory goLeft = sampleDrive.trajectoryBuilder(new Pose2d(6, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(26, 6, Math.toRadians(240)))
-                .build();
-
-        Trajectory backupToBackdrop = sampleDrive.trajectoryBuilder(new Pose2d(25, -8.5, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(18, -8.5, Math.toRadians(180)))
-                .build();
-
-        Trajectory backupToBackdropMiddle = sampleDrive.trajectoryBuilder(new Pose2d(28, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(10, 0, Math.toRadians(180)))
-                .build();
-
-        Trajectory backupToBackdropLeft = sampleDrive.trajectoryBuilder(new Pose2d(26, 5, Math.toRadians(240)), true)
-                .lineToLinearHeading(new Pose2d(10, 0, Math.toRadians(240)))
-                .build();
-
-        Trajectory backdropLeft = sampleDrive.trajectoryBuilder(new Pose2d(26, 5, Math.toRadians(240)), true)
-                .lineToLinearHeading(new Pose2d(33, -36.5, Math.toRadians(90)))
-                .build();
-
-        Trajectory backdropMiddle = sampleDrive.trajectoryBuilder(new Pose2d(10, 0, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(27, -36.5, Math.toRadians(90)))
-                .build();
-
-        Trajectory backdropRight = sampleDrive.trajectoryBuilder(new Pose2d(18, -8.5, Math.toRadians(180)), true)
-                .lineToLinearHeading(new Pose2d(18, -36.5, Math.toRadians(90)))
-                .build();
-
-        Trajectory getOutOfTheWayLeft = sampleDrive.trajectoryBuilder(new Pose2d(33, -36.5, Math.toRadians(90)), true)
-                .strafeLeft(33.5)
-                .build();
-
-        Trajectory getOutOfTheWayMiddle = sampleDrive.trajectoryBuilder(new Pose2d(27, -36.5, Math.toRadians(90)), true)
-                .strafeLeft(27.5)
-                .build();
-
-        Trajectory getOutOfTheWayRight = sampleDrive.trajectoryBuilder(new Pose2d(18, -36.5, Math.toRadians(90)), true)
-                .strafeLeft(18.5)
-                .build();
 
         TrajectorySequence placeLeft = sampleDrive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(6, 0, Math.toRadians(180)))
@@ -148,21 +92,8 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
                 .forward(3)
                 .build();
 
-        TrajectorySequence moveAwayLeft = sampleDrive.trajectorySequenceBuilder(forwardLeft.end())
-                .strafeRight(37)
-                .build();
-
-        TrajectorySequence moveAwayMiddle = sampleDrive.trajectorySequenceBuilder(forwardMiddle.end())
-                .strafeRight(33)
-                .build();
-
-        TrajectorySequence moveAwayRight = sampleDrive.trajectorySequenceBuilder(forwardRight.end())
-                .strafeRight(23)
-                .build();
-
         waitForStart();
         arm.init();
-        //drive.init();
 
         while (opModeIsActive()) {
             arm.setPivot(0.2);
@@ -178,8 +109,6 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
                     arm.openRightClaw();
                     sampleDrive.followTrajectorySequence(forwardRight);
                     arm.setArmPos(30, true);
-                    //sampleDrive.followTrajectorySequence(moveAwayRight);
-
                     return;
                 }
                 else if (circlePos == 2) {
@@ -190,7 +119,6 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
                     arm.openRightClaw();
                     sampleDrive.followTrajectorySequence(forwardMiddle);
                     arm.setArmPos(30, true);
-                    //sampleDrive.followTrajectorySequence(moveAwayMiddle);
 
                     return;
                 }
@@ -202,7 +130,6 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
                     arm.openRightClaw();
                     sampleDrive.followTrajectorySequence(forwardLeft);
                     arm.setArmPos(30, true);
-                    //sampleDrive.followTrajectorySequence(moveAwayLeft);
                     return;
                 }
 
@@ -210,17 +137,14 @@ public class REDTowardsBackboardAutonomous extends LinearOpMode {
             else if (propLoc.circleNum > 0) {
                 if (propLoc.recentCircle.x < 350) {
                     circlePos = 1;
-                    activeCircle = propLoc.recentCircle;
                     hasCircle = true;
                 }
                 else if (propLoc.recentCircle.x > 850) {
                     circlePos = 3;
-                    activeCircle = propLoc.recentCircle;
                     hasCircle = true;
                 }
                 else {
                     circlePos = 2;
-                    activeCircle = propLoc.recentCircle;
                     hasCircle = true;
                 }
 

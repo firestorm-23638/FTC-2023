@@ -24,7 +24,7 @@ public class FindProp extends OpenCvPipeline {
         Core.inRange(grey, new Scalar(0, 60, 80), new Scalar(180, 255, 255), grey);
         /* Denoises image by applying a slight blur */
         Core.bitwise_not(grey, grey);
-        //Core.bitwise_and(input, input, input, grey);
+
         input.setTo(new Scalar(0, 0, 0), grey);
         Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2GRAY);
         Imgproc.medianBlur(input, input, 5);
@@ -35,13 +35,12 @@ public class FindProp extends OpenCvPipeline {
 
         /* renders the circles to the stream image */
         circleNum = circles.cols();
-        double greatestRadius = 0;
+
         for (int i = 0; i < circles.cols(); i++) {
             double[] circle = circles.get(0, i);
             Point center = new Point(circle[0], circle[1]);
             double radius = circle[2];
             if (radius > 35) {
-                greatestRadius = radius;
                 circleRadius = radius;
                 recentCircle = center;
                 Imgproc.circle(input, center, (int)radius, new Scalar(255, 0, 255));

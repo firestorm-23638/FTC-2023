@@ -21,6 +21,7 @@ public class IntakeSubsystem implements BaseSubsystem {
 
     public void init() {
         servo = this.hardwareMap.get(Servo.class, "intakeServo");
+
         servo.setPosition(0.4);
     }
 
