@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -22,7 +20,7 @@ public class IntakeSubsystem implements BaseSubsystem {
     public void init() {
         servo = this.hardwareMap.get(Servo.class, "intakeServo");
 
-        servo.setPosition(0.4);
+        servo.setPosition(0.6);
     }
 
     public void loop() {
@@ -30,7 +28,7 @@ public class IntakeSubsystem implements BaseSubsystem {
             servo.setPosition(0);
         }
         else {
-            servo.setPosition(0.4);
+            servo.setPosition(0.6);
         }
     }
 }

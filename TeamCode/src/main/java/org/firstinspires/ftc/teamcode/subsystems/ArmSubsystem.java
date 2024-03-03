@@ -13,13 +13,12 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-
 public class ArmSubsystem implements BaseSubsystem {
     private boolean twoControllerMode = false;
     private boolean isAtGoal = true;
-    private boolean armGarageButtonState = false;
 
-    private double armGarageTarget = 0;
+    private double lastTime = -1;
+    private double currTime = -1;
 
     private DcMotorEx arm;
 
@@ -61,6 +60,10 @@ public class ArmSubsystem implements BaseSubsystem {
         armSwitch = this.hardwareMap.get(TouchSensor.class, "armSwitch");
     }
 
+    public void setCurrentTime(double t) {
+        currTime = t;
+    }
+
     public void init() {
         pivot.setPosition(0.25);
         leftClaw.setPosition(0.18);
@@ -96,17 +99,6 @@ public class ArmSubsystem implements BaseSubsystem {
         return withinDeadband(arm.getCurrentPosition(), pos, 7);
     }
 
-    public boolean armGarageButtonPressed() {
-        if (!this.gamepad.a) {
-            armGarageButtonState = true;
-        }
-        else if (armGarageButtonState) {
-            armGarageButtonState = false;
-            return true;
-        }
-        return false;
-    }
-
     public void setPivot(double pos) {pivot.setPosition(pos);}
 
     public void openLeftClaw() {
@@ -128,32 +120,14 @@ public class ArmSubsystem implements BaseSubsystem {
     public void loop() {
         telemetry.addData("is at goal", isAtGoal);
 
-        if (armGarageButtonPressed()) {
-            isAtGoal = false;
-            if (armGarageTarget == 0) {
-                armGarageTarget = 950;
-            }
-            else {
-                armGarageTarget = 0;
-            }
-        }
-
-        if (!isAtGoal) {
-            isAtGoal = setArmPos(armGarageTarget, false);
-        }
-
         if (armSwitch.isPressed()) {
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            if (isAtGoal) {
-                arm.setPower(this.gamepad.right_trigger);
-            }
+            arm.setPower(this.gamepad.right_trigger);
         }
         else {
-            if (isAtGoal) {
-                arm.setPower(this.gamepad.right_trigger - this.gamepad.left_trigger);
-            }
+            arm.setPower(this.gamepad.right_trigger - this.gamepad.left_trigger);
         }
 
         if (this.gamepad.right_stick_y != 0) {
@@ -169,38 +143,53 @@ public class ArmSubsystem implements BaseSubsystem {
                 }
             }
             else {
-                if (this.gamepad.b) {
+                /*if (this.gamepad.b) {
                     setPivot(0.46);
                 }
                 else {
                     setPivot(0.25);
-                }
+                }*/
             }
         }
 
         if (this.twoControllerMode) {
-            if (this.gamepad.right_bumper) {
-                openLeftClaw();
+            if (this.gamepad.a) {
+                if (!armSwitch.isPressed()) {
+                    openLeftClaw();
+                    openRightClaw();
+                }
+                else {
+                    openLeftClaw();
+                    openRightClaw();
+                    if (lastTime == -1) {
+                        lastTime = currTime + 0.5;
+                    }
+                    else if (currTime >= lastTime) {
+                        setPivot(0.46);
+                        lastTime = -1;
+                    }
+                }
             }
             else {
-                closeLeftClaw();
-            }
-            if (this.gamepad.left_bumper) {
-                openRightClaw();
-            }
-            else {
-                closeRightClaw();
+                if (!armSwitch.isPressed()) {
+                    closeLeftClaw();
+                    closeRightClaw();
+                }
+                else {
+                    closeLeftClaw();
+                    closeRightClaw();
+                    if (lastTime == -1) {
+                        lastTime = currTime + 0.5;
+                    }
+                    else if (currTime >= lastTime) {
+                        setPivot(0.25);
+                        lastTime = -1;
+                    }
+                }
             }
         }
         else {
-            if (this.gamepad.a) {
-                openLeftClaw();
-                openRightClaw();
-            }
-            else {
-                closeLeftClaw();
-                closeRightClaw();
-            }
+
         }
     }
 }
